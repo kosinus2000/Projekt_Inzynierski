@@ -8,6 +8,20 @@ from src.utils.poisson_sampling import poisson_sampling
 
 
 def generate_picture(width = 500, height = 500):
+    """
+    Generates an image with randomly sampled ellipses that simulate cell nuclei.
+
+    This function employs Poisson disk sampling to generate random points, which
+    serve as the centers for ellipses representing cell nuclei. It then draws these
+    ellipses on a blank image of the specified size.
+
+    Args:
+        width (int, optional): The width of the generated image in pixels. Defaults to 500.
+        height (int, optional): The height of the generated image in pixels. Defaults to 500.
+
+    Returns:
+        np.ndarray: A 3D array representing the generated image with drawn nuclei.
+    """
     points = poisson_sampling(width, height, 10)
     image = np.zeros((width, height, 3), np.uint8)
     for center_point in points:

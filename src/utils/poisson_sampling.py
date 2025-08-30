@@ -33,14 +33,11 @@ def poisson_sampling(width, height, r, k=30):
     active_list = []
     cell_size = r / math.sqrt(2)
 
-    # Podzielenie pola obrazu na komórki o wymiarach cell_size
     cols = int(width / cell_size) + 1
     rows = int(height / cell_size) + 1
 
-    # Inicjalizacja tablicy w formacie (y,x)
     grid = [[None for x in range(rows)] for x in range(cols)]
 
-    # Losowanie dowolnego punktu na polu
     x = random.uniform(0, width)
     y = random.uniform(0, height)
     p0 = (x, y)

@@ -1,3 +1,9 @@
+"""
+A module to represent and draw nuclei shapes on an image using OpenCV.
+
+This module provides a class `Nuclei` that encapsulates details of an
+ellipse-like nuclei structure and facilitates drawing it onto an image.
+"""
 import cv2
 import numpy as np
 
