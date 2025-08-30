@@ -5,40 +5,49 @@ import numpy as np
 
 from src.utils.nuclei import Nuclei
 
-class CancerNucleus(Nuclei):
-    def __init__(self, center, axes, angle=0, color=(200, 200, 255), thickness=-1, irregularity=0.3):
 
-        super().__init__(center, axes, angle, color, thickness)
+class CancerNucleus(Nuclei):
+    def __init__(self, center, axes, angle=0, color=(20, 0, 100), thickness=-1, irregularity=0.3,
+                 border_color=(0, 0, 0), border_thickness=2):
+        super().__init__(center, axes, angle, color, thickness, border_color, border_thickness)
         self.irregularity = irregularity
 
     def draw_nuclei(self, image):
         cx, cy = self.center
         a, b = self.axes
-        angle =np.deg2rad( self.angle)
 
+        a, b = int(a), int(b)
+        angle = float(self.angle)
+        angle_rad = np.deg2rad(angle)
 
         points = []
         num_points = 1000
 
         for i in range(num_points):
             t = 2 * math.pi * i / num_points
-            x = a * np.cos(t)
-            y = b * np.sin(t)
 
-            factor = 1 + self.irregularity * (0.3*np.sin(6*t) + 0.7*(pyrandom.random()-0.5))
-            x *= factor
-            y *= factor
+            scale_a = a * (1 + self.irregularity * (pyrandom.uniform(-0.2, 0.2)))
+            scale_b = b * (1 + self.irregularity * (pyrandom.uniform(-0.2, 0.2)))
 
-            xr = x * np.cos(angle) - y * np.sin(angle)
-            yr = x * np.sin(angle) + y * np.cos(angle)
+            x = scale_a * np.cos(t)
+            y = scale_b * np.sin(t)
+
+            if self.irregularity > 0:
+                extra_noise = 1 + (self.irregularity * 0.1) * (
+                        0.5 * np.sin(8 * t) +
+                        0.5 * (pyrandom.random() - 0.5)
+                )
+                x *= extra_noise
+                y *= extra_noise
+
+            xr = x * np.cos(angle_rad) - y * np.sin(angle_rad)
+            yr = x * np.sin(angle_rad) + y * np.cos(angle_rad)
 
             points.append([int(cx + xr), int(cy + yr)])
 
         points = np.array(points, dtype=np.int32).reshape((-1, 1, 2))
 
-        if self.thickness < 0:
-            # wypełnij kształt (jak -1 w ellipse)
-            cv2.fillPoly(image, [points], self.color)
-        else:
-            # sam kontur o zadanej grubości
-            cv2.polylines(image, [points], isClosed=True, color=self.color, thickness=self.thickness)
+        cv2.fillPoly(image, [points], self.color)
+
+        if self.border_thickness > 0:
+            cv2.polylines(image, [points], isClosed=True, color=self.border_color, thickness=self.border_thickness)
