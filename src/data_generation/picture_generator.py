@@ -2,39 +2,47 @@ import random
 import cv2
 import numpy as np
 
-from src.functions.ellipse import ellipse_proportion
+from src.functions.ellipse import ellipse_proportion, cell_size, cell_size_proportionally
 from src.utils.cancer_nucleus import CancerNucleus
 from src.utils.poisson_sampling import poisson_sampling
 
 
-def generate_picture(width = 500, height = 500):
+def generate_picture(width = 500, height = 500, proportionally = False ):
     """
-    Generates an image with randomly sampled ellipses that simulate cell nuclei.
-
-    This function employs Poisson disk sampling to generate random points, which
-    serve as the centers for ellipses representing cell nuclei. It then draws these
-    ellipses on a blank image of the specified size.
+    Generates an image based on a given width, height, and whether proportions should be
+    maintained. The function applies Poisson sampling to generate points and draws cancer
+    nucleus shapes within an image based on specified configurations.
 
     Args:
-        width (int, optional): The width of the generated image in pixels. Defaults to 500.
-        height (int, optional): The height of the generated image in pixels. Defaults to 500.
+        width (int): The width of the generated image.
+        height (int): The height of the generated image.
+        proportionally (bool): Determines if the cell size should be calculated proportionally
+            to the dimensions of the image.
 
     Returns:
-        np.ndarray: A 3D array representing the generated image with drawn nuclei.
+        numpy.ndarray: An image represented as an array with the specified dimensions and
+        generated decor.
     """
+
     points = poisson_sampling(width, height, 10)
     image = np.zeros((width, height, 3), np.uint8)
+
+
+
     for center_point in points:
-        axes = ellipse_proportion(random.randint(2,4))
+        if proportionally:
+            nuclei_size = cell_size_proportionally(width, height)
+        else:
+            nuclei_size = cell_size()
+        axes = ellipse_proportion(nuclei_size)
         angle = random.randint(0, 360)
 
         (CancerNucleus(center=center_point,
                       axes= axes,
-                      angle = angle, color =(20, 0, 100),
+                      angle = angle,
                       thickness = -1,
-                      irregularity=0.3,
-                      border_color=(0, 0, 0),
-                      border_thickness=2)
+                      irregularity=0.1,
+                      border_thickness=1)
          .draw_nuclei(image))
     return image
 
