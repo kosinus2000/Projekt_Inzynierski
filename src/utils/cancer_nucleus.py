@@ -29,6 +29,10 @@ class CancerNucleus(Nuclei):
         self.seed = np.random.randint(0, 100)
 
     def draw_nuclei(self, image):
+        super().draw_nuclei(image)
+
+
+    def draw_nuclei_with_perlin_noise(self, image):
         cx, cy = self.center
         ax, ay = self.axes
         angle = np.deg2rad(self.angle)

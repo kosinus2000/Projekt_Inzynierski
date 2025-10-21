@@ -31,3 +31,5 @@ def cell_size():
 
     return cell_size
 
+# def random_elipse_proportion(width, height):
+

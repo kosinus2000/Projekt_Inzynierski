@@ -4,10 +4,12 @@ A module to represent and draw nuclei shapes on an image using OpenCV.
 This module provides a class `Nuclei` that encapsulates details of an
 ellipse-like nuclei structure and facilitates drawing it onto an image.
 """
+
+from abc import abstractmethod, ABC
 import cv2
 import numpy as np
 
-class Nuclei:
+class Nuclei(ABC):
 
     def __init__(self, center, axes, angle=0, color=(0, 0, 139), thickness=-1, border_color=(0, 0, 80),
                  border_thickness=0):
