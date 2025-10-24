@@ -11,8 +11,8 @@ import numpy as np
 
 class Nuclei(ABC):
 
-    def __init__(self, center, axes, angle=0, color=(0, 0, 139), thickness=-1, border_color=(0, 0, 80),
-                 border_thickness=0):
+    def __init__(self, center, axes, angle=0, color=(160, 83, 179), thickness=-1, border_color=(107, 26, 121),
+                 border_thickness=2):
         self.center = center
         self.axes = axes
         self.angle = angle
