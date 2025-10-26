@@ -6,17 +6,21 @@ from src.functions.ellipse import CalculateCenterOfImage, CalculateAxesSizeFromI
 from src.utils.cancer_nucleus import CancerNucleus
 
 
-def single_cell_generator_with_open_window(size_x=int, size_y=int):
+def single_cell_generator_with_open_window(size_x: int, size_y: int):
     """
-    Generates a single cell image with a cancer nucleus and displays it in an open window.
+    Generates a single cell-like image with a nucleus, displays the created image in
+    an open window, and waits for the user's input to close.
 
-    This function creates an image of specified dimensions and generates a cancer nucleus
-    with specific properties including position, size, angle, irregularity, and border
-    thickness. The nucleus is drawn on the image, and the image is displayed in a window.
+    This function first creates a blank image of the given size with three color
+    channels. It then initializes a CancerNucleus instance with parameters like the
+    center, axes, angle, irregularity, and border thickness calculated based on the
+    provided image size. The nucleus is drawn on the image, and the resulting image
+    is displayed in a new window.
 
     Args:
-        size_x: Width of the generated image.
-        size_y: Height of the generated image.
+        size_x (int): Width of the generated image.
+        size_y (int): Height of the generated image.
+
     """
     image = np.zeros((size_x, size_y, 3), dtype=np.uint8)
     cancer_nucleus = CancerNucleus( center=CalculateCenterOfImage(size_x, size_y),
@@ -31,23 +35,21 @@ def single_cell_generator_with_open_window(size_x=int, size_y=int):
     cv2.destroyAllWindows()
 
 
-def single_cell_generator_with_return_image(size_x=int, size_y=int):
+def single_cell_generator_with_return_image(size_x: int, size_y: int):
     """
-    Generates an image with a single cancer nucleus for simulation purposes.
+    Generate an image of a single cell with its nucleus.
 
-    This function creates an image of specified dimensions with a black
-    background and simulates a single cancer nucleus in it. The cancer
-    nucleus properties, such as center, axes size, angle, irregularity,
-    and border thickness, are calculated or randomized based on the
-    image size.
+    This function creates a single cell with a nucleus represented in an image of specified size.
+    The size and characteristics of the nucleus are determined based on the image dimensions
+    and various random and calculated parameters.
 
     Args:
-        size_x: The width of the generated image in pixels.
-        size_y: The height of the generated image in pixels.
+        size_x (int): The width of the image in pixels.
+        size_y (int): The height of the image in pixels.
 
     Returns:
-        numpy.ndarray: An image array representing the generated image
-        with a single cancer nucleus.
+        np.ndarray: A 3D NumPy array representing the image with a single cell nucleus, where
+                    the shape of the array is (size_x, size_y, 3) and dtype is uint8.
     """
     image = np.zeros((size_x, size_y, 3), dtype=np.uint8)
     cancer_nucleus = CancerNucleus(center=CalculateCenterOfImage(size_x, size_y),
@@ -58,3 +60,6 @@ def single_cell_generator_with_return_image(size_x=int, size_y=int):
 
     cancer_nucleus.draw_nuclei(image)
     return image
+
+
+

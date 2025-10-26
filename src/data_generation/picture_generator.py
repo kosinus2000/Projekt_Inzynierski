@@ -7,7 +7,7 @@ from src.utils.cancer_nucleus import CancerNucleus
 from src.utils.poisson_sampling import poisson_sampling
 
 
-def generate_picture_with_Poisson_sampling(width = 500, height = 500, proportionally = False):
+def generate_picture_with_Poisson_sampling(width: int = 500, height: int = 500, proportionally: bool = False):
     """
     Generates an image based on a given width, height, and whether proportions should be
     maintained. The function applies Poisson sampling to generate points and draws cancer
@@ -46,7 +46,7 @@ def generate_picture_with_Poisson_sampling(width = 500, height = 500, proportion
          .draw_nuclei(image))
     return image
 
-def generate_picture (rows, columns, method_to_generate):
+def generate_picture (rows: int, columns: int , method_to_generate):
     """
     Generates a grid of pictures and displays it in a window.
 
@@ -74,3 +74,12 @@ def generate_picture (rows, columns, method_to_generate):
     cv2.imshow('picture', grid)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
+
+def generate_image_with_random_aligment (number_of_cells: int, size_x: int, size_y: int):
+    dim_of_x_single_cell = size_x / number_of_cells
+    dim_of_y_single_cell = size_y / number_of_cells
+
+
+
+    image = np.zeros((size_x, size_y, 3), dtype=np.uint8)
+
