@@ -1,4 +1,8 @@
+import math
 import random
+
+import numpy as np
+
 
 def ellipse_proportion(x):
     """
@@ -55,6 +59,37 @@ def cell_size():
 
     return cell_size
 
-def random_elipse_proportion(width, height):
+
+def CalculateCenterOfImage(size_x=int, size_y=int):
+    center_x = math.floor(size_x / 2)
+    center_y = math.floor(size_y / 2)
+    return (center_x, center_y)
+
+def CalculateAxesSizeFromImageSize(size_x, size_y):
+    a = size_x *0.3
+    b = size_y *0.195
+
+    base_scale = 3
+    standard_avg_size = 200
+    mean_size = (size_x + size_y) / 2
+    scaling_ratio = mean_size / standard_avg_size
+
+    adaptive_ratio = math.sqrt(scaling_ratio)
+    scale = max(2, base_scale * adaptive_ratio)
+
+    axis_a = np.random.normal(loc=a, scale= 2 )
+    axis_b = np.random.normal(loc=b, scale= scale )
+    return (int(max(1, axis_a)), int(max(1, axis_b)))
+
+def BorderLineThickness(size_x, size_y):
+    base_scale = 3
+
+    mean_size = (size_x + size_y) / 2
+    scaling_ratio = mean_size / 100
+
+    adaptive_ratio = math.sqrt(scaling_ratio)+0.5
+    scale = max(2, base_scale * adaptive_ratio)
+    return int(scale)
+
 
 
