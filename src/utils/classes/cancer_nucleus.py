@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 import noise
 
-from src.utils.nuclei import Nuclei
+from src.utils.classes.nuclei import Nuclei
 
 
 class CancerNucleus(Nuclei):
@@ -33,6 +33,17 @@ class CancerNucleus(Nuclei):
 
 
     def draw_nuclei_with_perlin_noise(self, image):
+        """
+        Draws nuclei shapes on the provided image using a Perlin noise-based algorithm to
+        create irregular and biologically inspired edges.
+
+        This function modifies the input image by overlaying polygonal nuclei shapes that
+        simulate natural irregularities using noise values. The function supports color
+        customization, border thickness, and rotation of the nuclei shapes.
+
+        Args:
+            image (numpy.ndarray): The input image on which the nuclei shapes are drawn.
+        """
         cx, cy = self.center
         ax, ay = self.axes
         angle = np.deg2rad(self.angle)

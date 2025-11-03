@@ -1,3 +1,9 @@
+"""
+A module for performing a variety of geometric calculations related to ellipses
+and cell proportions. Provides functions for scaling dimensions and generating
+randomized values for cell and axis sizes.
+
+"""
 import math
 import random
 
@@ -60,12 +66,41 @@ def cell_size():
     return cell_size
 
 
-def CalculateCenterOfImage(size_x=int, size_y=int):
+def calculate_center_of_image(size_x=int, size_y=int):
+    """
+    Calculates the center coordinates of an image based on its dimensions.
+
+    This function takes the width and height of an image and calculates the
+    coordinates of its center point. It uses the floor division to ensure that
+    the result is an integer.
+
+    Args:
+        size_x (int): The width of the image.
+        size_y (int): The height of the image.
+
+    Returns:
+        tuple: A tuple containing the x and y coordinates of the center point
+        of the image as integers.
+    """
     center_x = math.floor(size_x / 2)
     center_y = math.floor(size_y / 2)
     return (center_x, center_y)
 
-def CalculateAxesSizeFromImageSize(size_x, size_y):
+def calculate_axes_size_from_image_size(size_x, size_y):
+    """
+    Calculates the optimal sizes of axes based on input image dimensions. This function takes the
+    dimensions of an image and computes axes sizes by scaling them adaptively, factoring in
+    random variation to simulate realistic sizing conditions. The computation maintains minimum
+    values for the axes to ensure valid results.
+
+    Args:
+        size_x (float): Width of the input image.
+        size_y (float): Height of the input image.
+
+    Returns:
+        tuple: A tuple containing the calculated sizes of the two axes as integers.
+    """
+
     a = size_x *0.3
     b = size_y *0.195
 
@@ -79,17 +114,7 @@ def CalculateAxesSizeFromImageSize(size_x, size_y):
 
     axis_a = np.random.normal(loc=a, scale= 2 )
     axis_b = np.random.normal(loc=b, scale= scale )
+
     return (int(max(1, axis_a)), int(max(1, axis_b)))
-
-def BorderLineThickness(size_x, size_y):
-    base_scale = 3
-
-    mean_size = (size_x + size_y) / 2
-    scaling_ratio = mean_size / 100
-
-    adaptive_ratio = math.sqrt(scaling_ratio)+0.5
-    scale = max(2, base_scale * adaptive_ratio)
-    return int(scale)
-
 
 

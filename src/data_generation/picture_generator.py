@@ -2,9 +2,9 @@ import random
 import cv2
 import numpy as np
 
-from src.functions.ellipse import ellipse_proportion, cell_size, cell_size_proportionally
-from src.utils.cancer_nucleus import CancerNucleus
-from src.utils.poisson_sampling import poisson_sampling
+from src.functions.ellipse_params import ellipse_proportion, cell_size, cell_size_proportionally
+from src.utils.classes.cancer_nucleus import CancerNucleus
+from src.functions.poisson_sampling import poisson_sampling
 
 
 def generate_picture_with_Poisson_sampling(width: int = 500, height: int = 500, proportionally: bool = False):
@@ -76,6 +76,16 @@ def generate_picture (rows: int, columns: int , method_to_generate):
     cv2.destroyAllWindows()
 
 def generate_image_with_random_aligment (number_of_cells: int, size_x: int, size_y: int):
+    """
+    Generates an image with a grid of random alignments where each cell in the grid is randomly assigned with content, and the size and number of cells define the resolution.
+
+    This function creates an image with specified dimensions and divides it into a grid based on the number of cells in both x and y directions. Each cell's alignment or random properties are determined within the grid.
+
+    Args:
+        number_of_cells (int): The number of cells along each dimension in the grid.
+        size_x (int): The width of the image in pixels.
+        size_y (int): The height of the image in pixels.
+    """
     dim_of_x_single_cell = size_x / number_of_cells
     dim_of_y_single_cell = size_y / number_of_cells
 
