@@ -22,7 +22,11 @@ class CancerNucleus(Nuclei):
 
     def __init__(self, center, axes, angle=0, color=(160, 83, 179), thickness=-1, irregularity=0.3,
                  border_color=(107, 26, 121), border_thickness=2):
-        super().__init__(center, axes, angle, color, thickness)
+
+        safe_center = (int(center[0]), int(center[1]))
+        safe_axes = (int(axes[0]), int(axes[1]))
+
+        super().__init__(safe_center, safe_axes, angle, color, thickness)
         self.irregularity = irregularity
         self.border_color = border_color
         self.border_thickness = border_thickness

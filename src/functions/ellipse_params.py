@@ -44,7 +44,7 @@ def cell_size_proportionally(width, height):
     cell_size_from = average_size * 0.004
     cell_size_to = average_size * 0.012
 
-    cell_size = random.randint(cell_size_from, cell_size_to)
+    cell_size = random.randint(int(cell_size_from), int(cell_size_to))
 
     return cell_size
 

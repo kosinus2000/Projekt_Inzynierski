@@ -2,22 +2,25 @@ from src.data_generation.single_cell_generator import calculate_axes_size_from_i
 import numpy as np
 
 
-def set_generator(num_pictures : int):
+def set_generator(num_pictures : int, size_x : int = 28, size_y : int = 28):
     """
-    Generates a list of images using the `single_cell_generator_with_return_image` function. The
-    generated images have dimensions of 28x28 pixels and the total number of images returned
-    is determined by the `num_pictures` parameter.
+    Generates a list of pictures by calling a single cell image generator function multiple times.
+
+    This function creates a specified number of single cell images with a predefined width and
+    height. It returns a list containing the generated images.
 
     Args:
-        num_pictures (int): The number of pictures to generate.
+        num_pictures (int): Number of pictures to generate.
+        size_x (int): Width of each image in pixels. Defaults to 28.
+        size_y (int): Height of each image in pixels. Defaults to 28.
 
     Returns:
-        list: A list containing the generated images.
+        list: A list of generated images.
     """
     list_of_pictures = []
 
     for _ in range(100):
-        image = single_cell_generator_with_return_image(28, 28)
+        image = single_cell_generator_with_return_image(size_x, size_y)
         list_of_pictures.append(image)
 
     return list_of_pictures

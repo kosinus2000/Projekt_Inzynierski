@@ -27,7 +27,7 @@ class Autoencoder(Model):
     self.latent_dim = latent_dim
     self.encoder = tf.keras.Sequential([
       layers.Flatten(),
-      layers.Dense(latent_dim, activation='relu'),
+      layers.Dense(latent_dim, activation='relu'), #encoder
     ])
     self.decoder = tf.keras.Sequential([
       layers.Dense(2352, activation='sigmoid'),
@@ -41,10 +41,10 @@ class Autoencoder(Model):
 
 
 
-
+# Utworzenie instancji enkodera
 autoencoder = Autoencoder(latent_dim)
 
-autoencoder.compile(optimizer='adam', loss=losses.MeanSquaredError())
+autoencoder.compile(optimizer="adam", loss=losses.MeanSquaredError())
 
 x_train, x_test = load_data()
 autoencoder.fit(x_train, x_train,

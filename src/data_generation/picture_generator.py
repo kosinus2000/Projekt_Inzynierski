@@ -25,17 +25,21 @@ def generate_picture_with_Poisson_sampling(width: int = 500, height: int = 500, 
     """
 
     points = poisson_sampling(width, height, 10)
-    image = np.zeros((width, height, 3), np.uint8)
+    image = np.zeros((height, width, 3), np.uint8)
 
 
 
     for center_point in points:
         if proportionally:
             nuclei_size = cell_size_proportionally(width, height)
+
         else:
             nuclei_size = cell_size()
         axes = ellipse_proportion(nuclei_size)
         angle = random.randint(0, 360)
+
+        center = (int(center_point[0]), int(center_point[1]))
+        axes = (int(axes[0]), int(axes[1]))
 
         (CancerNucleus(center=center_point,
                       axes= axes,
@@ -46,7 +50,7 @@ def generate_picture_with_Poisson_sampling(width: int = 500, height: int = 500, 
          .draw_nuclei(image))
     return image
 
-def generate_picture (rows: int, columns: int , method_to_generate):
+def generate_picture_with_rows_and_columns (rows: int, columns: int, method_to_generate):
     """
     Generates a grid of pictures and displays it in a window.
 
@@ -75,21 +79,47 @@ def generate_picture (rows: int, columns: int , method_to_generate):
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
-def generate_image_with_random_aligment (number_of_cells: int, size_x: int, size_y: int):
-    """
-    Generates an image with a grid of random alignments where each cell in the grid is randomly assigned with content, and the size and number of cells define the resolution.
-
-    This function creates an image with specified dimensions and divides it into a grid based on the number of cells in both x and y directions. Each cell's alignment or random properties are determined within the grid.
-
-    Args:
-        number_of_cells (int): The number of cells along each dimension in the grid.
-        size_x (int): The width of the image in pixels.
-        size_y (int): The height of the image in pixels.
-    """
-    dim_of_x_single_cell = size_x / number_of_cells
-    dim_of_y_single_cell = size_y / number_of_cells
 
 
+def generate_image_with_random_aligment(width: int = 128, height: int = 128):
 
-    image = np.zeros((size_x, size_y, 3), dtype=np.uint8)
+    image = np.zeros((width, height, 3), dtype=np.uint8)
 
+    pixel_density = 2500
+    total_area = width * height
+    num_cells = int(total_area / pixel_density)
+
+    lista = []
+
+    for _ in range(num_cells):
+        x = random.uniform(0, width)
+        y = random.uniform(0, height)
+        p = [int(x), int(y)]
+        lista.append(p)
+
+
+    cell_size  = cell_size_proportionally(width, height)
+    axes = ellipse_proportion(cell_size)
+    angle = random.randint(0, 360)
+
+    for point in lista:
+        center = (int(point[0]), int(point[1]))
+        cell_size = cell_size_proportionally(width, height)
+        axes = ellipse_proportion(cell_size)
+        angle = random.randint(0, 360)
+
+        (CancerNucleus(center=center,
+                      axes=axes,
+                      angle=angle,
+                      thickness=-1,
+                      irregularity=0.1,
+                      border_thickness=1)
+         .draw_nuclei(image))
+
+    return image
+
+
+def show_image(image):
+    cv2.imshow('picture', image)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
