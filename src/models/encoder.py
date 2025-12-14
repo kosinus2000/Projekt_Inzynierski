@@ -23,7 +23,7 @@ latent_dim = 64
 
 class Autoencoder(Model):
   def __init__(self, latent_dim):
-    super(Autoencoder, self).__init__()
+    super().__init__()
     self.latent_dim = latent_dim
     self.encoder = tf.keras.Sequential([
       layers.Flatten(),

@@ -2,6 +2,7 @@ import random
 import cv2
 import numpy as np
 
+import src
 from src.functions.ellipse_params import ellipse_proportion, cell_size, cell_size_proportionally
 from src.utils.classes.cancer_nucleus import CancerNucleus
 from src.functions.poisson_sampling import poisson_sampling
@@ -81,7 +82,7 @@ def generate_picture_with_rows_and_columns (rows: int, columns: int, method_to_g
 
 
 
-def generate_image_with_random_aligment(width: int = 128, height: int = 128):
+def generate_image_with_random_aligment(width: int = 128, height: int = 128,  ):
 
     image = np.zeros((width, height, 3), dtype=np.uint8)
 
@@ -90,15 +91,15 @@ def generate_image_with_random_aligment(width: int = 128, height: int = 128):
     num_cells = int(total_area / pixel_density)
 
     lista = []
-
+    cell_size = cell_size_proportionally(width, height)
     for _ in range(num_cells):
-        x = random.uniform(0, width)
-        y = random.uniform(0, height)
+        x = random.uniform(4 + cell_size , width - cell_size -4)
+        y = random.uniform(4+ cell_size, height - cell_size -4)
         p = [int(x), int(y)]
         lista.append(p)
 
 
-    cell_size  = cell_size_proportionally(width, height)
+
     axes = ellipse_proportion(cell_size)
     angle = random.randint(0, 360)
 

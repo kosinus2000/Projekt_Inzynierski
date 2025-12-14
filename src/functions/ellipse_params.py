@@ -25,7 +25,7 @@ def ellipse_proportion(x):
     y = x * 0.65
     return (int(x), int(y))
 
-def cell_size_proportionally(width, height):
+def cell_size_proportionally(width : int, height : int):
     """
     Calculates the cell size proportionally based on the provided width and height.
 
@@ -41,12 +41,14 @@ def cell_size_proportionally(width, height):
         int: A randomly chosen cell size within the calculated proportional range.
     """
     average_size = (width + height) / 2
-    cell_size_from = average_size * 0.004
-    cell_size_to = average_size * 0.012
 
-    cell_size = random.randint(int(cell_size_from), int(cell_size_to))
+    raw_from = int(average_size * 0.07)
+    raw_to = int(average_size * 0.17)
 
-    return cell_size
+    cell_size_from = max(1, raw_from)
+    cell_size_to = max(cell_size_from, raw_to)
+
+    return random.randint(cell_size_from, cell_size_to)
 
 def cell_size():
     """
