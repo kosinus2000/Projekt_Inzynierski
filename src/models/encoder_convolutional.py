@@ -66,7 +66,6 @@ class Encoder_conv(Model):
             layers.BatchNormalization(),
             layers.LeakyReLU(alpha=0.2),
 
-            # WYJŚCIE
             layers.Conv2D(3, (3, 3), activation='sigmoid', padding='same')
         ])
 
@@ -77,7 +76,7 @@ class Encoder_conv(Model):
 
 
 autoencoder_conv = Encoder_conv()
-autoencoder_conv.compile(optimizer='adam', loss='BinaryCrossentropy')
+autoencoder_conv.compile(optimizer='adam', loss='BinaryCrossentropy',metrics=['accuracy'])
 
 x_train, x_test = load_data()
 autoencoder_conv.fit(x_train, x_train,
@@ -89,6 +88,8 @@ encoded_imgs = autoencoder_conv.encoder(x_test).numpy()
 decoded_imgs = autoencoder_conv.decoder(encoded_imgs).numpy()
 
 print("--- DIAGNOSTYKA ---")
+test_loss, test_acc = autoencoder_conv.evaluate(x_test, x_test, verbose=2)
+print(f'Test accuracy: {test_acc*100:.2f}%')
 print(f"Input Min: {x_test.min()}, Max: {x_test.max()}, Mean: {x_test.mean()}")
 print(f"Output Min: {decoded_imgs.min()}, Max: {decoded_imgs.max()}, Mean: {decoded_imgs.mean()}")
 
@@ -111,3 +112,4 @@ for i in range(n):
       ax.get_xaxis().set_visible(False)
       ax.get_yaxis().set_visible(False)
 plt.show()
+
