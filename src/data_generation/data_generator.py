@@ -1,3 +1,4 @@
+from data_generation.picture_generator import generate_image_with_random_aligment
 from src.data_generation.single_cell_generator import calculate_axes_size_from_image_size, single_cell_generator_with_return_image
 import numpy as np
 
@@ -19,8 +20,19 @@ def set_generator(num_pictures : int, size_x : int = 28, size_y : int = 28):
     """
     list_of_pictures = []
 
-    for _ in range(100):
+    for _ in range(num_pictures):
         image = single_cell_generator_with_return_image(size_x, size_y)
+        list_of_pictures.append(image)
+
+    return list_of_pictures
+
+
+def set_generator_with_random_aligment(num_pictures : int, size_x : int = 128, size_y : int = 128):
+
+    list_of_pictures = []
+
+    for _ in range(num_pictures):
+        image = proba_losowego = generate_image_with_random_aligment()
         list_of_pictures.append(image)
 
     return list_of_pictures
