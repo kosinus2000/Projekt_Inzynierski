@@ -1,15 +1,14 @@
-[project]
+
+[tool.poetry]
 name = "projekt-inzynierski"
 version = "0.1.0"
 description = "Projekt inżynierski: analiza obrazów i uczenie maszynowe"
-authors = [
-    {name = "Hubert Kosiorowski",email = "hubert.kosiorowski1@gmail.com"}
-]
+authors = ["Hubert Kosiorowski <hubert.kosiorowski1@gmail.com>"]
 readme = "README.md"
-requires-python = ">=3.11"
-dependencies = [
-]
+packages = [{include = "src"}]
 
+[tool.poetry.dependencies]
+python = ">=3.11"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
