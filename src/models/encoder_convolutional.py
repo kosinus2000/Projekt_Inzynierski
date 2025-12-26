@@ -7,6 +7,7 @@ from tensorflow.keras import layers
 from tensorflow.keras.models import Model
 
 from src.data_generation.data_generator import set_generator_with_random_aligment
+from visualization.visualize_output import visualize_output
 
 
 def load_data():
@@ -87,6 +88,7 @@ autoencoder_conv.fit(x_train, x_train,
 encoded_imgs = autoencoder_conv.encoder(x_test).numpy()
 decoded_imgs = autoencoder_conv.decoder(encoded_imgs).numpy()
 
+
 print("--- DIAGNOSTYKA ---")
 test_loss, test_acc = autoencoder_conv.evaluate(x_test, x_test, verbose=2)
 print(f'Test accuracy: {test_acc*100:.2f}%')
@@ -94,22 +96,5 @@ print(f"Input Min: {x_test.min()}, Max: {x_test.max()}, Mean: {x_test.mean()}")
 print(f"Output Min: {decoded_imgs.min()}, Max: {decoded_imgs.max()}, Mean: {decoded_imgs.mean()}")
 
 n = 10
-plt.figure(figsize=(20, 4))
-for i in range(n):
-      # display original
-      ax = plt.subplot(2, n, i + 1)
-      plt.imshow(x_test[i])
-      plt.title("original")
-      plt.gray()
-      ax.get_xaxis().set_visible(False)
-      ax.get_yaxis().set_visible(False)
-
-      # display reconstruction
-      ax = plt.subplot(2, n, i + 1 + n)
-      plt.imshow(decoded_imgs[i])
-      plt.title("reconstructed")
-      plt.gray()
-      ax.get_xaxis().set_visible(False)
-      ax.get_yaxis().set_visible(False)
-plt.show()
+visualize_output(x_test, decoded_imgs, n)
 
