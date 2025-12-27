@@ -84,23 +84,20 @@ class CancerNucleus(Nuclei):
 
 
 class CancerNucleusTest(NucleiTest):
-    _lista_punktów = []
-    _licznik = 0
-    _liczba_punktów = 0
+
     def __init__(self, axes_size, irregularity=0.3, angle=0, color=(160, 83, 179),
                  thickness=-1, border_color=(107, 26, 121), border_thickness=2):
 
-
         super().__init__(
-            center = points_generator(poisson=True)
-            , axes_size = axes_size
-            , angle = angle
-            , color = color
-            , thickness = thickness
-            , border_color = border_color
-            , border_thickness = border_thickness
+            center=NucleiTest.points_generator(poisson=True),
+            axes_size=axes_size,
+            angle=angle,
+            color=color,
+            thickness=thickness,
+            border_color=border_color,
+            border_thickness=border_thickness
         )
         self.irregularity = irregularity
 
-    def return_center(self):
-        return self.center
+    def draw_nuclei(self, image):
+        pass
