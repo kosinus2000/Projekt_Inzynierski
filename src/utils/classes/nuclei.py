@@ -21,3 +21,22 @@ class Nuclei(ABC):
 
         if self.border_thickness > 0:
             cv2.ellipse(image, self.center, self.axes, self.angle, 0, 360, self.border_color, self.border_thickness)
+
+
+class NucleiTest(ABC):
+    def __init__(self,
+                 center,
+                 axes_size,
+                 angle=0,
+                 color=(160, 83, 179),
+                 thickness=-1,
+                 border_color=(107, 26, 121),
+                 border_thickness=2):
+
+        self.center = center
+        self.axes_size = axes_size
+        self.angle = angle
+        self.color = color
+        self.thickness = thickness
+        self.border_color = border_color
+        self.border_thickness = border_thickness

@@ -3,7 +3,8 @@ import cv2
 import numpy as np
 import noise
 
-from src.utils.classes.nuclei import Nuclei
+from functions.points_generator import points_generator
+from src.utils.classes.nuclei import Nuclei, NucleiTest
 
 
 class CancerNucleus(Nuclei):
@@ -80,3 +81,26 @@ class CancerNucleus(Nuclei):
         cv2.fillPoly(image, [points], self.color)
         if self.border_thickness > 0:
             cv2.polylines(image, [points], isClosed=True, color=self.border_color, thickness=self.border_thickness)
+
+
+class CancerNucleusTest(NucleiTest):
+    _lista_punktów = []
+    _licznik = 0
+    _liczba_punktów = 0
+    def __init__(self, axes_size, irregularity=0.3, angle=0, color=(160, 83, 179),
+                 thickness=-1, border_color=(107, 26, 121), border_thickness=2):
+
+
+        super().__init__(
+            center = points_generator(poisson=True)
+            , axes_size = axes_size
+            , angle = angle
+            , color = color
+            , thickness = thickness
+            , border_color = border_color
+            , border_thickness = border_thickness
+        )
+        self.irregularity = irregularity
+
+    def return_center(self):
+        return self.center
