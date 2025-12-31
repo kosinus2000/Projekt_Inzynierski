@@ -30,7 +30,6 @@ class NucleiTest(ABC):
     _counter = 0
     _number_of_points = 0
 
-
     def __init__(self,
                  center,
                  axes_size,

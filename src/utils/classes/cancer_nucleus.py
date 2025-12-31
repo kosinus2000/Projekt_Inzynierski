@@ -84,7 +84,6 @@ class CancerNucleus(Nuclei):
 
 
 class CancerNucleusTest(NucleiTest):
-
     def __init__(self, axes_size, irregularity=0.3, angle=0, color=(160, 83, 179),
                  thickness=-1, border_color=(107, 26, 121), border_thickness=2):
 
@@ -100,4 +99,5 @@ class CancerNucleusTest(NucleiTest):
         self.irregularity = irregularity
 
     def draw_nuclei(self, image):
+
         pass
