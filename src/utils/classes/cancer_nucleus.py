@@ -2,8 +2,6 @@ import math
 import cv2
 import numpy as np
 import noise
-
-from functions.points_generator import points_generator
 from src.utils.classes.nuclei import Nuclei, NucleiTest
 
 
@@ -84,11 +82,11 @@ class CancerNucleus(Nuclei):
 
 
 class CancerNucleusTest(NucleiTest):
-    def __init__(self, axes_size, irregularity=0.3, angle=0, color=(160, 83, 179),
+    def __init__(self, center, axes_size, irregularity=0.3, angle=0, color=(160, 83, 179),
                  thickness=-1, border_color=(107, 26, 121), border_thickness=2):
 
         super().__init__(
-            center=NucleiTest.points_generator(poisson=True),
+            center=center,
             axes_size=axes_size,
             angle=angle,
             color=color,
@@ -99,5 +97,4 @@ class CancerNucleusTest(NucleiTest):
         self.irregularity = irregularity
 
     def draw_nuclei(self, image):
-
-        pass
+        super().draw_nuclei(image)

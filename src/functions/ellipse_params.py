@@ -10,7 +10,7 @@ import random
 import numpy as np
 
 
-def ellipse_proportion(x):
+def ellipse_proportion(x, ratio=0.65):
     """
     Calculates and returns the dimensions of an ellipse proportionally scaled from
     the given input.
@@ -21,8 +21,8 @@ def ellipse_proportion(x):
     Returns:
         tuple: A tuple containing the integer width and height of the scaled ellipse.
     """
-    ratio = 0.65
-    y = x * 0.65
+
+    y = x * ratio
     return (int(x), int(y))
 
 def cell_size_proportionally(width : int, height : int):

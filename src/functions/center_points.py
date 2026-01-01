@@ -6,13 +6,14 @@ from rpds.rpds import List
 from functions.poisson_sampling import poisson_sampling
 
 
-class CenterGenerator(ABC):
+class CenterPointsGenerator(ABC):
 
     def __init__(self, size_x, size_y, number_of_points):
         self.size_x = size_x
         self.size_y = size_y
         self.number_of_points = number_of_points
         self._points = []
+
         self._counter = 0
 
         @abstractmethod
@@ -32,7 +33,7 @@ class CenterGenerator(ABC):
                 self._points = self.generate_points()
                 return self.get_next_center()
 
-class PoissonAlgorithm(CenterGenerator):
+class PoissonAlgorithm(CenterPointsGenerator):
     def __init__(self, size_x, size_y, radius=5, k=30):
         super().__init__(size_x,size_y)
         self.radius = radius
@@ -41,7 +42,7 @@ class PoissonAlgorithm(CenterGenerator):
     def generate_points(self):
         return poisson_sampling(self.size_x, self.size_y, self.radius, self.k)
 
-class RandomAlignmentOfCenters(CenterGenerator):
+class RandomAlignmentOfCenters(CenterPointsGenerator):
     def __init__(self, size_x, size_y, number_of_points, cell_size):
         super().__init__(size_x, size_y, number_of_points )
         self.cell_size = cell_size
@@ -56,7 +57,7 @@ class RandomAlignmentOfCenters(CenterGenerator):
 
         return points
 
-class GaussianAlgorithm(CenterGenerator):
+class GaussianAlgorithm(CenterPointsGenerator):
     def __init__(self, size_x, size_y, number_of_points, dev):
         super().__init__(size_x, size_y, number_of_points)
         self.dev = dev
@@ -78,9 +79,32 @@ class GaussianAlgorithm(CenterGenerator):
             return points
 
 
-class ClusteredAlgorithm(CenterGenerator):
+class ClusteredAlgorithm(CenterPointsGenerator):
     """
+    Implements a clustering algorithm based on generated centers.
 
+    This class derives from the `CenterPointsGenerator` base class and provides
+    an implementation of an algorithm used for clustering data points into
+    groups based on specific criteria. Its purpose is to facilitate
+    cluster analysis by leveraging generated centers and applying clustering
+    principles to group data effectively. The class provides mechanisms
+    to initialize, process, and manage clusters based on the underlying
+    algorithm.
+
+    Attributes
+    ----------
+    max_iterations : int
+        The maximum number of iterations allowed for the clustering algorithm
+        to converge.
+    tolerance : float
+        The tolerance level for convergence. Determines the extent of
+        allowable changes in cluster centers before stopping iterations.
+    clusters : dict
+        A dictionary where keys represent cluster identifiers and values
+        represent associated data points.
+    centers : list
+        A list of centers, each representing a cluster's central point in
+        the feature space.
     """
 
     def __init__(self, size_x, size_y, number_of_points, num_clusters = None, dev=40):
