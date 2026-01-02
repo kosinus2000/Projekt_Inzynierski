@@ -1,7 +1,9 @@
 import math
+
 import cv2
-import numpy as np
 import noise
+import numpy as np
+
 from src.utils.classes.nuclei import Nuclei, NucleiTest
 
 
@@ -82,12 +84,12 @@ class CancerNucleus(Nuclei):
 
 
 class CancerNucleusTest(NucleiTest):
-    def __init__(self, center, axes_size, irregularity=0.3, angle=0, color=(160, 83, 179),
+    def __init__(self, center, axes, irregularity=0.3, angle=0, color=(160, 83, 179),
                  thickness=-1, border_color=(107, 26, 121), border_thickness=2):
 
         super().__init__(
             center=center,
-            axes_size=axes_size,
+            axes= axes,
             angle=angle,
             color=color,
             thickness=thickness,

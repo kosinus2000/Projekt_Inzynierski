@@ -1,8 +1,11 @@
 import random
 from abc import ABC
+
 import cv2
 
-from functions.poisson_sampling import poisson_sampling
+from src.functions.axes_distribution_functions import Axes
+from src.functions.center_points import CenterPointsGenerator
+from src.functions.poisson_sampling import poisson_sampling
 
 
 class Nuclei(ABC):
@@ -27,44 +30,27 @@ class Nuclei(ABC):
 
 
 class NucleiTest(ABC):
-    _list_of_points = []
-    _counter = 0
-    _number_of_points = 0
 
     def __init__(self,
-                 center,
-                 axes_size,
-                 angle= random.randint(0, 360),
+                 point_generator_instance: CenterPointsGenerator,
+                 axes_generator_instance: Axes,
+                 angle= None,
                  color=(160, 83, 179),
                  thickness=-1,
                  border_color=(107, 26, 121),
                  border_thickness=2):
 
-        self.center = center
-        self.axes_size = axes_size
-        self.angle = angle
+        self.center = point_generator_instance.get_next_point()
+
+        if self.center is None:
+            raise ValueError("No more points to generate")
+
+        self.axes = axes_generator_instance.generate_axes()
+        self.angle = angle if angle is not None else random.randint(0, 360)
         self.color = color
         self.thickness = thickness
         self.border_color = border_color
         self.border_thickness = border_thickness
-
-    # @staticmethod
-    # def points_generator(poisson=False):
-    #     if poisson:
-    #         if not NucleiTest._list_of_points:
-    #             NucleiTest._list_of_points = poisson_sampling(128, 128)
-    #
-    #         if NucleiTest._counter < len(NucleiTest._list_of_points):
-    #             center = NucleiTest._list_of_points[NucleiTest._counter]
-    #             NucleiTest._counter += 1
-    #             return center
-    #         else:
-    #             NucleiTest._counter = 0
-    #             return NucleiTest.points_generator(poisson=True)
-    #     return (0, 0)
-
-    def return_center(self):
-        return self.center
 
     def draw_nuclei(self, image):
         cv2.ellipse(image, self.center, self.axes, self.angle, 0, 360, self.color, self.thickness)

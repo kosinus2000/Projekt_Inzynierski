@@ -1,7 +1,7 @@
 import random
 from abc import ABC, abstractmethod
 
-from functions.ellipse_params import ellipse_proportion
+from src.functions.ellipse_params import ellipse_proportion
 
 
 class Axes(ABC):
@@ -19,7 +19,7 @@ class Axes(ABC):
         self._ratio = value
 
     @abstractmethod
-    def generate_axes(self) -> [int, int]:
+    def generate_axes(self) -> tuple[int, int]:
         pass
 
     def use_ratio(self):
@@ -27,19 +27,22 @@ class Axes(ABC):
         
 
 class AxesWithNormalDistribution(Axes):
-    def __init__(self, x, y, dev):
-       super().__init__(x, y)
+    def __init__(self, x, y,size, dev):
+       super().__init__(x, y,size)
        self.dev = dev
 
     def generate_axes(self):
         gen_x = random.gauss(self.x, self.dev)
         gen_y = random.gauss(self.y, self.dev)
-        return int(gen_x), int(gen_y)
+        return int(abs(gen_x)), int(abs(gen_y))
 
 class AxesWithUniformDistribution(Axes):
-    def __init__(self, x, y, dev):
-        super().__init__(x, y)
+    def __init__(self, x, y,size, dev):
+        super().__init__(x, y, size)
         self.dev = dev
 
     def generate_axes(self):
-        return random.randint(self.x - self.dev,  self.x + self.dev), random.randint(self.y - self.dev, self.y + self.dev)
+        ax1 = random.randint(self.x - self.dev, self.x + self.dev)
+        ax2 = random.randint(self.y - self.dev, self.y + self.dev)
+        return int(abs(ax1)), int(abs(ax2))
+

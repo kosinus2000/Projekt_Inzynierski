@@ -1,41 +1,46 @@
 import random
 from abc import ABC, abstractmethod
-
-from rpds.rpds import List
-
-from functions.poisson_sampling import poisson_sampling
+from src.functions.poisson_sampling import poisson_sampling
 
 
 class CenterPointsGenerator(ABC):
 
-    def __init__(self, size_x, size_y, number_of_points):
+    def __init__(self,
+                 size_x,
+                 size_y,
+                 number_of_points):
         self.size_x = size_x
         self.size_y = size_y
         self.number_of_points = number_of_points
         self._points = []
+        self._iterator = None
 
-        self._counter = 0
+    @abstractmethod
+    def generate_points(self) -> list:
+        pass
 
-        @abstractmethod
-        def generate_points(self) -> List[int,int]:
-            pass
+    def prepare_iterator(self):
+        self._points = self.generate_points()
+        self._iterator = iter(self._points)
+        print(f"Generated {len(self._points)} centers")
 
-        def get_next_center(self):
-            if not self._points:
-                self._points = self.generate_points()
+    def get_next_point(self):
+        if self._iterator is None:
+            self.prepare_iterator()
 
-            if self._counter < len(self._points):
-                center = self._points[self._counter]
-                self._counter += 1
-                return center
-            else:
-                self._counter = 0
-                self._points = self.generate_points()
-                return self.get_next_center()
+        try:
+            point = next(self._iterator)
+            return int(point[0]), int(point[1])
+        except StopIteration:
+            return None
 
 class PoissonAlgorithm(CenterPointsGenerator):
-    def __init__(self, size_x, size_y, radius=5, k=30):
-        super().__init__(size_x,size_y)
+    def __init__(self,
+                 size_x,
+                 size_y,
+                 radius=5,
+                 k=35):
+        super().__init__(size_x,size_y,0)
         self.radius = radius
         self.k = k
 
@@ -43,7 +48,11 @@ class PoissonAlgorithm(CenterPointsGenerator):
         return poisson_sampling(self.size_x, self.size_y, self.radius, self.k)
 
 class RandomAlignmentOfCenters(CenterPointsGenerator):
-    def __init__(self, size_x, size_y, number_of_points, cell_size):
+    def __init__(self,
+                 size_x,
+                 size_y,
+                 number_of_points,
+                 cell_size):
         super().__init__(size_x, size_y, number_of_points )
         self.cell_size = cell_size
 
@@ -52,8 +61,7 @@ class RandomAlignmentOfCenters(CenterPointsGenerator):
         for _ in range(self.number_of_points):
             x = random.uniform(4 + self.cell_size, self.size_x - self.cell_size - 4)
             y = random.uniform(4 + self.cell_size, self.size_y - self.cell_size - 4)
-            p = [int(x), int(y)]
-            points.append(p)
+            points.append((int(x), int(y)))
 
         return points
 
@@ -62,21 +70,21 @@ class GaussianAlgorithm(CenterPointsGenerator):
         super().__init__(size_x, size_y, number_of_points)
         self.dev = dev
 
-        def generate_points(self):
-            points = []
-            center_x = self.size_x / 2
-            center_y = self.size_y / 2
+    def generate_points(self):
+        points = []
+        center_x = self.size_x / 2
+        center_y = self.size_y / 2
 
-            for _ in range(self.number_of_points):
-                x = random.gauss(center_x, self.size_x * self.dev)
-                y = random.gauss(center_y, self.size_y * self.dev)
+        for _ in range(self.number_of_points):
+            x = random.gauss(center_x, self.size_x * self.dev)
+            y = random.gauss(center_y, self.size_y * self.dev)
 
-                x = max(0, min(int(x), self.size_x))
-                y = max(0, min(int(y), self.size_y))
+            x = max(0, min(int(x), self.size_x))
+            y = max(0, min(int(y), self.size_y))
 
-                points.append([x, y])
+            points.append((int(x), int(y)))
 
-            return points
+        return points
 
 
 class ClusteredAlgorithm(CenterPointsGenerator):
@@ -133,6 +141,6 @@ class ClusteredAlgorithm(CenterPointsGenerator):
             x = max(0, min(int(x), self.size_x))
             y = max(0, min(int(y), self.size_y))
 
-            points.append([x, y])
+            points.append((int(x), int(y)))
 
         return points
