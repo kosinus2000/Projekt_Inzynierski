@@ -2,6 +2,7 @@ import random
 from abc import ABC
 
 import cv2
+import numpy as np
 
 from src.functions.axes_distribution_functions import Axes
 from src.functions.center_points import CenterPointsGenerator
@@ -39,7 +40,6 @@ class NucleiTest(ABC):
                  thickness=-1,
                  border_color=(107, 26, 121),
                  border_thickness=2):
-
         self.center = point_generator_instance.get_next_point()
 
         if self.center is None:

@@ -124,3 +124,17 @@ def show_image(image):
     cv2.imshow('picture', image)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
+
+def create_slide_image(points_gen, axes_gen, cell_class, width: int = 128, height: int = 128):
+    image = np.zeros((width, height, 3), dtype=np.uint8)
+
+    while True:
+        try:
+            cell = cell_class(points_gen, axes_gen)
+            cell.draw_nuclei(image)
+        except ValueError:
+            break
+
+    cv2.imshow("Generated image", image)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()

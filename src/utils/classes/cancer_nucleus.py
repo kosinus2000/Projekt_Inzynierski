@@ -84,17 +84,16 @@ class CancerNucleus(Nuclei):
 
 
 class CancerNucleusTest(NucleiTest):
-    def __init__(self, center, axes, irregularity=0.3, angle=0, color=(160, 83, 179),
-                 thickness=-1, border_color=(107, 26, 121), border_thickness=2):
+    def __init__(self,
+                 point_generator_instance,
+                 axes_generator_instance,
+                 irregularity=0.3,
+                 **kwargs):
 
         super().__init__(
-            center=center,
-            axes= axes,
-            angle=angle,
-            color=color,
-            thickness=thickness,
-            border_color=border_color,
-            border_thickness=border_thickness
+            point_generator_instance=point_generator_instance,
+            axes_generator_instance=axes_generator_instance,
+            **kwargs
         )
         self.irregularity = irregularity
 
