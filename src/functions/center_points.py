@@ -100,11 +100,12 @@ class CenterPointsGenerator(ABC):
         except StopIteration:
             return None
 
-class PoissonAlgorithm(CenterPointsGenerator):
+class PoissonAlgorithmCenterGenerator(CenterPointsGenerator):
     """
     Summary of what the class does.
+    
 
-    The PoissonAlgorithm class is responsible for generating points on a 2D plane
+    The PoissonAlgorithmCenterGenerator class is responsible for generating points on a 2D plane
     using the Poisson sampling algorithm. This class inherits from the
     CenterPointsGenerator class and enables users to specify the dimensions of the
     space, the minimum allowable distance between points, and other related parameters.
@@ -129,7 +130,7 @@ class PoissonAlgorithm(CenterPointsGenerator):
     def generate_points(self):
         return poisson_sampling(self.size_x, self.size_y, self.radius, self.k)
 
-class GaussianAlgorithm(CenterPointsGenerator):
+class GaussianAlgorithmCenterGenerator(CenterPointsGenerator):
     """
     Generates center points based on a Gaussian distribution.
 
@@ -174,7 +175,7 @@ class GaussianAlgorithm(CenterPointsGenerator):
 
         return points
 
-class RandomAlignmentOfCenters(CenterPointsGenerator):
+class RandomAlignmentCenterGenerator(CenterPointsGenerator):
     """
     Generates random center points within given dimensions, ensuring alignment
     constraints based on cell size.
@@ -215,7 +216,7 @@ class RandomAlignmentOfCenters(CenterPointsGenerator):
         return points
 
 
-class ClusteredAlgorithm(CenterPointsGenerator):
+class ClusteredAlgorithmCenterGenerator(CenterPointsGenerator):
     """
     Represents a clustered algorithm for generating points in a 2D space.
 

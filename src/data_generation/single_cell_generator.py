@@ -3,7 +3,7 @@ import cv2
 
 from src.functions.ellipse_params import calculate_center_of_image, calculate_axes_size_from_image_size
 from src.utils.cell_settings import border_line_thickness
-from src.utils.classes.cancer_nucleus import CancerNucleus
+from src.utils.classes.cancer_nucleus import CancerNucleusOld
 
 
 def single_cell_generator_with_open_window(size_x: int, size_y: int):
@@ -12,7 +12,7 @@ def single_cell_generator_with_open_window(size_x: int, size_y: int):
     an open window, and waits for the user's input to close.
 
     This function first creates a blank image of the given size with three color
-    channels. It then initializes a CancerNucleus instance with parameters like the
+    channels. It then initializes a CancerNucleusOld instance with parameters like the
     center, axes, angle, irregularity, and border thickness calculated based on the
     provided image size. The nucleus is drawn on the image, and the resulting image
     is displayed in a new window.
@@ -23,11 +23,11 @@ def single_cell_generator_with_open_window(size_x: int, size_y: int):
 
     """
     image = np.zeros((size_x, size_y, 3), dtype=np.uint8)
-    cancer_nucleus = CancerNucleus(center=calculate_center_of_image(size_x, size_y),
-                                   axes=calculate_axes_size_from_image_size(size_x, size_y),
-                                   angle=np.random.randint(0, 360),
-                                   irregularity=0.2,
-                                   border_thickness=border_line_thickness(size_x, size_y))
+    cancer_nucleus = CancerNucleusOld(center=calculate_center_of_image(size_x, size_y),
+                                      axes=calculate_axes_size_from_image_size(size_x, size_y),
+                                      angle=np.random.randint(0, 360),
+                                      irregularity=0.2,
+                                      border_thickness=border_line_thickness(size_x, size_y))
 
     cancer_nucleus.draw_nuclei(image)
     cv2.imshow('Nucleus',image)
@@ -52,11 +52,11 @@ def single_cell_generator_with_return_image(size_x: int, size_y: int):
                     the shape of the array is (size_x, size_y, 3) and dtype is uint8.
     """
     image = np.zeros((size_x, size_y, 3), dtype=np.uint8)
-    cancer_nucleus = CancerNucleus(center=calculate_center_of_image(size_x, size_y),
-                                   axes=calculate_axes_size_from_image_size(size_x, size_y),
-                                   angle=np.random.randint(0, 360),
-                                   irregularity=0.2,
-                                   border_thickness=border_line_thickness(size_x, size_y))
+    cancer_nucleus = CancerNucleusOld(center=calculate_center_of_image(size_x, size_y),
+                                      axes=calculate_axes_size_from_image_size(size_x, size_y),
+                                      angle=np.random.randint(0, 360),
+                                      irregularity=0.2,
+                                      border_thickness=border_line_thickness(size_x, size_y))
 
     cancer_nucleus.draw_nuclei(image)
     return image

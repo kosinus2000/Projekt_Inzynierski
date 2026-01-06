@@ -27,7 +27,7 @@ def set_generator(num_pictures : int, size_x : int = 28, size_y : int = 28):
     return list_of_pictures
 
 
-def set_generator_with_random_aligment(num_pictures : int, size_x : int = 128, size_y : int = 128):
+def set_generator_with_random_aligment(num_pictures : int):
 
     list_of_pictures = []
 

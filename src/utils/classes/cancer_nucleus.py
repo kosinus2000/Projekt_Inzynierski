@@ -4,13 +4,14 @@ import cv2
 import noise
 import numpy as np
 
-from src.utils.classes.nuclei import Nuclei, NucleiTest
+from src.utils.classes.nuclei import NucleiOld, Nuclei
+from src.utils.cell_settings import generate_color_variation_normal
 
 
-class CancerNucleus(Nuclei):
+class CancerNucleusOld(NucleiOld):
     """Represents a cancerous nucleus with custom irregularity and styling attributes.
 
-    This class extends the Nuclei class, adding the functionality to render an
+    This class extends the NucleiOld class, adding the functionality to render an
     irregular ellipsoidal shape. The irregular nature of the shape is controlled by
     the irregularity attribute, which introduces variations in the geometry of the
     ellipsoid. It also allows customization of color, thickness, border color, and
@@ -83,19 +84,69 @@ class CancerNucleus(Nuclei):
             cv2.polylines(image, [points], isClosed=True, color=self.border_color, thickness=self.border_thickness)
 
 
-class CancerNucleusTest(NucleiTest):
+class CancerNucleus(Nuclei):
     def __init__(self,
                  point_generator_instance,
                  axes_generator_instance,
                  irregularity=0.3,
+                 color = None,
                  **kwargs):
+
+        if color is None:
+            color = generate_color_variation_normal((160, 83, 179))
 
         super().__init__(
             point_generator_instance=point_generator_instance,
             axes_generator_instance=axes_generator_instance,
+            color = color,
             **kwargs
         )
         self.irregularity = irregularity
 
-    def draw_nuclei(self, image):
-        super().draw_nuclei(image)
+
+
+
+    def draw_nuclei_with_perlin_noise(self, image):
+        """
+        Draws nuclei shapes on the provided image using a Perlin noise-based algorithm to
+        create irregular and biologically inspired edges.
+
+        This function modifies the input image by overlaying polygonal nuclei shapes that
+        simulate natural irregularities using noise values. The function supports color
+        customization, border thickness, and rotation of the nuclei shapes.
+
+        Args:
+            image (numpy.ndarray): The input image on which the nuclei shapes are drawn.
+        """
+        cx, cy = self.center
+        ax, ay = self.axes
+        angle = np.deg2rad(self.angle)
+
+        points = []
+        num_points = 1000
+
+        for i in range(num_points):
+            t = 2 * math.pi * i / num_points
+            x = ax * np.cos(t)
+            y = ay * np.sin(t)
+
+            perlin_value = noise.pnoise1(t * 2.0,
+                                         octaves=4,
+                                         persistence=0.5,
+                                         lacunarity=3.0,
+                                         repeat=1024,
+                                         base=self.seed)
+            factor = 1 + self.irregularity * perlin_value
+
+            x *= factor
+            y *= factor
+
+            xr = x * np.cos(angle) - y * np.sin(angle)
+            yr = x * np.sin(angle) + y * np.cos(angle)
+
+            points.append([int(cx + xr), int(cy + yr)])
+
+        points = np.array(points, dtype=np.int32).reshape((-1, 1, 2))
+        cv2.fillPoly(image, [points], self.color)
+        if self.border_thickness > 0:
+            cv2.polylines(image, [points], isClosed=True, color=self.border_color, thickness=self.border_thickness)

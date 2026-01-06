@@ -88,12 +88,12 @@ autoencoder_conv.fit(x_train, x_train,
 encoded_imgs = autoencoder_conv.encoder(x_test).numpy()
 decoded_imgs = autoencoder_conv.decoder(encoded_imgs).numpy()
 
-
-print("--- DIAGNOSTYKA ---")
-test_loss, test_acc = autoencoder_conv.evaluate(x_test, x_test, verbose=2)
-print(f'Test accuracy: {test_acc*100:.2f}%')
-print(f"Input Min: {x_test.min()}, Max: {x_test.max()}, Mean: {x_test.mean()}")
-print(f"Output Min: {decoded_imgs.min()}, Max: {decoded_imgs.max()}, Mean: {decoded_imgs.mean()}")
+def print_diag():
+    print("--- DIAGNOSTYKA ---")
+    test_loss, test_acc = autoencoder_conv.evaluate(x_test, x_test, verbose=2)
+    print(f'Test accuracy: {test_acc*100:.2f}%')
+    print(f"Input Min: {x_test.min()}, Max: {x_test.max()}, Mean: {x_test.mean()}")
+    print(f"Output Min: {decoded_imgs.min()}, Max: {decoded_imgs.max()}, Mean: {decoded_imgs.mean()}")
 
 n = 10
 visualize_output(x_test, decoded_imgs, n)
