@@ -92,6 +92,9 @@ class CancerNucleus(Nuclei):
                  color = None,
                  **kwargs):
 
+        self.irregularity = irregularity
+        self.seed = np.random.randint(0, 100000)
+
         if color is None:
             color = generate_color_variation_normal((160, 83, 179))
 
@@ -101,7 +104,6 @@ class CancerNucleus(Nuclei):
             color = color,
             **kwargs
         )
-        self.irregularity = irregularity
 
 
 
