@@ -115,3 +115,5 @@ class ImageGenerator:
             return UniformDistributionAxesGenerator(cen_points_gen.mean_x, cen_points_gen.mean_y, cen_points_gen.deviation)
         else:
             raise ValueError(f"Unknown axes distribution: {cen_points_gen.distribution_type}")
+
+    def br
