@@ -1,5 +1,5 @@
 from typing import Optional
-from utils.classes.config import GenerationConfig
+from utils.classes.config import GenerationConfig, NucleusConfig
 
 
 class ImageGenerator:
@@ -41,4 +41,25 @@ class ImageGenerator:
         self.config.distribution.dev = dev
         self.config.distribution.algorithm = 'clustered'
         return self
+
+    def with_perlin_noice(self, endabled: bool = True) -> 'ImageGenerator':
+        self.config.nucleus.use_perlin_noise = endabled
+        return self
+
+    def with_axes_config(self, mean_x:int = 10, mean_y : int = 8, std_dev: int = 2, distribution : str ='normal' ) -> 'ImageGenerator':
+        self.config.axes.mean_x = mean_x
+        self.config.axes.mean_y = mean_y
+        self.config.axes.std_dev = std_dev
+        self.config.distribution.distribution = distribution
+        return self
+
+    def with_healthy_cells(self, enabled: bool = True, color: Optional[tuple]= None) -> 'ImageGenerator':
+        self.config.composition.include_healthy_cells = enabled
+        if color and self.config.composition.healthy_config is None:
+            self.config.composition.healthy_config = NucleusConfig(base_color=color)
+
+        return self
+
+    def with_custom_distribution(self, generator = CenterPointsGenerator) -> 'ImageGenerator':
+
 
