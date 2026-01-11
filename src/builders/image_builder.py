@@ -1,6 +1,9 @@
 from typing import Optional
 
-from utils.classes.center_points import CenterPointsGenerator
+from utils.classes.axes_distribution_functions import Axes, UniformDistributionAxesGenerator, \
+    NormalDistributionAxesGenerator
+from utils.classes.center_points import CenterPointsGenerator, GaussianAlgorithmCenterGenerator, \
+    PoissonAlgorithmCenterGenerator, RandomAlignmentCenterGenerator, ClusteredAlgorithmCenterGenerator
 from utils.classes.config import GenerationConfig, NucleusConfig
 
 
@@ -79,4 +82,36 @@ class ImageGenerator:
         self.config.nucleus.border_thickness = border_thickness
         return self
 
+    def _create_distribution_strategy(self) -> CenterPointsGenerator:
+        if self._distribution_strategy is None:
+            return self._distribution_strategy
 
+        cen_points_gen =self.config.distribution
+        width = self.config.image.size_x
+        height = self.config.image.size_y
+
+        if cen_points_gen.algorithm == 'gaussian':
+            return GaussianAlgorithmCenterGenerator(width, height, cen_points_gen.number_of_points, cen_points_gen.dev)
+        elif cen_points_gen.algorithm == 'poisson':
+            return PoissonAlgorithmCenterGenerator(width, height, cen_points_gen.number_of_points, cen_points_gen.dev)
+        elif cen_points_gen.algorithm == 'random':
+            cell_size = cen_points_gen.cell_size or 10
+            return RandomAlignmentCenterGenerator(width, height,cen_points_gen.number_of_points, cell_size)
+        elif cen_points_gen.algorithm == 'clustered':
+            return ClusteredAlgorithmCenterGenerator(width, height, cen_points_gen.number_of_points,cen_points_gen.num_clusters, cen_points_gen.dev)
+        else:
+            raise ValueError(f'Unknown distribution strategy {cen_points_gen.algorithm}')
+
+    def _create_axes_strategy(self) -> Axes:
+        """Create axes generation strategy based on configuration."""
+        if self._axes_strategy is not None:
+            return self._axes_strategy
+
+        cen_points_gen = self.config.axes
+
+        if cen_points_gen.distribution_type == 'normal':
+            return NormalDistributionAxesGenerator(cen_points_gen.mean_x, cen_points_gen.mean_y, 0, cen_points_gen.std_dev)
+        elif cen_points_gen.distribution_type == 'uniform':
+            return UniformDistributionAxesGenerator(cen_points_gen.mean_x, cen_points_gen.mean_y, cen_points_gen.deviation)
+        else:
+            raise ValueError(f"Unknown axes distribution: {cen_points_gen.distribution_type}")
