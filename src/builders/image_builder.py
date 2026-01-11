@@ -1,4 +1,6 @@
 from typing import Optional
+
+from utils.classes.center_points import CenterPointsGenerator
 from utils.classes.config import GenerationConfig, NucleusConfig
 
 
@@ -60,6 +62,21 @@ class ImageGenerator:
 
         return self
 
-    def with_custom_distribution(self, generator = CenterPointsGenerator) -> 'ImageGenerator':
+    def with_custom_distribution(self, generator: CenterPointsGenerator) -> 'ImageGenerator':
+        self._distribution_strategy = generator
+        return self
+
+    def with_custom_axes(self, axes_gen: Axes) -> 'ImageGenerator':
+        if self._axes_strategy is None:
+            self._axes_strategy = axes_gen
+        return self
+
+    def with_cancers_cells(self, irregularity : float = 0.3,
+                           color: Optional[tuple]= None,
+                           border_thickness : int = 2) -> 'ImageGenerator':
+        self.config.nucleus.irregularity = irregularity
+        self.config.nucleus.color = color
+        self.config.nucleus.border_thickness = border_thickness
+        return self
 
 
