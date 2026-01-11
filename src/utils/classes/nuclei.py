@@ -2,12 +2,9 @@ import random
 from abc import ABC
 
 import cv2
-import numpy as np
 
-from src.functions.axes_distribution_functions import Axes
-from src.functions.axes_distribution_functions import UniformDistributionAxesGenerator
-from src.functions.center_points import CenterPointsGenerator
-from src.functions.poisson_sampling import poisson_sampling
+from utils.classes.axes_distribution_functions import Axes
+from utils.classes.center_points import CenterPointsGenerator
 
 
 class NucleiOld(ABC):

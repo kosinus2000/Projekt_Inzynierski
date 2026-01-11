@@ -20,18 +20,13 @@ Functions:
 
 """
 import random
-from argparse import ArgumentError
 
 import cv2
 import numpy as np
 
-from src.functions.center_points import CenterPointsGenerator
-from src.functions.axes_distribution_functions import Axes
 from src.functions.ellipse_params import ellipse_proportion, cell_size, cell_size_proportionally
 from src.utils.classes.cancer_nucleus import CancerNucleusOld
 from src.functions.poisson_sampling import poisson_sampling
-from src.utils.classes.cancer_nucleus import CancerNucleus
-from src.utils.classes.healthy_nucleus import HealthyNucleus
 
 
 def generate_picture_with_Poisson_sampling(width: int = 500, height: int = 500, proportionally: bool = False):

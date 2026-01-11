@@ -231,7 +231,8 @@ class ClusteredAlgorithmCenterGenerator(CenterPointsGenerator):
         The number of clusters to generate within the 2D space. If not specified,
         a random value is assigned between 3 and 9 inclusive.
     dev : int
-        The standard deviation determining the spread of points around each
+        The
+         standard deviation determining the spread of points around each
         cluster center.
     """
     def __init__(self
