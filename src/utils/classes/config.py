@@ -1,12 +1,13 @@
 from dataclasses import dataclass, field
-from typing import Tuple, Optional
+from typing import Optional, Tuple
 
 
 @dataclass
 class ImageConfig:
-    size_x: int = 128
-    size_y: int = 128
-    backgroundColor: Tuple[int, int, int] = (0, 0, 0)
+    width: int = 128
+    height: int = 128
+    background_color: Tuple[int, int, int] = (0, 0, 0)
+
 
 @dataclass
 class NucleusConfig:
@@ -15,26 +16,30 @@ class NucleusConfig:
     border_thickness: int = 2
     thickness: int = -1
     irregularity: float = 0.3
-    color_variation: float = 0.3
+    color_variation_std: float = 20.0
     use_perlin_noise: bool = False
+
 
 @dataclass
 class AxesConfig:
     mean_x: int = 10
     mean_y: int = 8
     std_dev: int = 2
-    dev: int = 2
-    distribution_type: str = 'normal'
+    deviation: int = 2
+    ratio: float = 0.65
+    distribution_type: str = "normal"
+
 
 @dataclass
 class DistributionConfig:
-    algorithm: str = 'poisson'
+    algorithm: str = "poisson"
     number_of_points: int = 10
     radius: int = 30
     k: int = 35
-    dev: int = 40
-    num_clusters: Optional[int] = None
+    deviation: int = 40
     cell_size: Optional[int] = None
+    num_clusters: Optional[int] = None
+
 
 @dataclass
 class CellCompositionConfig:
@@ -42,6 +47,7 @@ class CellCompositionConfig:
     cancer_config: NucleusConfig = field(default_factory=NucleusConfig)
     healthy_config: Optional[NucleusConfig] = None
     healthy_axes_config: Optional[AxesConfig] = None
+
 
 @dataclass
 class GenerationConfig:

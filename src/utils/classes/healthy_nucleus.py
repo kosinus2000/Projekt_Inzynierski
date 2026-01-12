@@ -1,4 +1,4 @@
-from src.utils.classes.nuclei import NucleiOld, Nuclei
+from src.utils.classes.nucleus import NucleiOld, Nuclei
 from src.utils.cell_settings import generate_color_variation_normal
 
 

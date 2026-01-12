@@ -3,8 +3,8 @@ from abc import ABC
 
 import cv2
 
-from utils.classes.axes_distribution_functions import Axes
-from utils.classes.center_points import CenterPointsGenerator
+from src.utils.classes.axes_distribution_functions import Axes
+from src.utils.classes.center_points import CenterPointsGenerator
 
 
 class NucleiOld(ABC):

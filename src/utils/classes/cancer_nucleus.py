@@ -4,7 +4,7 @@ import cv2
 import noise
 import numpy as np
 
-from src.utils.classes.nuclei import NucleiOld, Nuclei
+from src.utils.classes.nucleus import NucleiOld, Nuclei
 from src.utils.cell_settings import generate_color_variation_normal
 
 
@@ -76,12 +76,17 @@ class CancerNucleusOld(NucleiOld):
             xr = x * np.cos(angle) - y * np.sin(angle)
             yr = x * np.sin(angle) + y * np.cos(angle)
 
-            points.append([int(cx + xr), int(cy + yr)])
+            px = int(cx + xr)
+            py = int(cy + yr)
+            # Clip points to image bounds to prevent crashes
+            px = int(np.clip(px, 0, image.shape[1] - 1))
+            py = int(np.clip(py, 0, image.shape[0] - 1))
+            points.append([px, py])
 
-        points = np.array(points, dtype=np.int32).reshape((-1, 1, 2))
-        cv2.fillPoly(image, [points], self.color)
+        points = np.array(points, dtype=np.int32)
+        cv2.drawContours(image, [points], 0, self.color, -1)
         if self.border_thickness > 0:
-            cv2.polylines(image, [points], isClosed=True, color=self.border_color, thickness=self.border_thickness)
+            cv2.drawContours(image, [points], 0, self.border_color, self.border_thickness)
 
 
 class CancerNucleus(Nuclei):
@@ -146,9 +151,14 @@ class CancerNucleus(Nuclei):
             xr = x * np.cos(angle) - y * np.sin(angle)
             yr = x * np.sin(angle) + y * np.cos(angle)
 
-            points.append([int(cx + xr), int(cy + yr)])
+            px = int(cx + xr)
+            py = int(cy + yr)
+            # Clip points to image bounds to prevent crashes
+            px = int(np.clip(px, 0, image.shape[1] - 1))
+            py = int(np.clip(py, 0, image.shape[0] - 1))
+            points.append([px, py])
 
-        points = np.array(points, dtype=np.int32).reshape((-1, 1, 2))
-        cv2.fillPoly(image, [points], self.color)
+        points = np.array(points, dtype=np.int32)
+        cv2.drawContours(image, [points], 0, self.color, -1)
         if self.border_thickness > 0:
-            cv2.polylines(image, [points], isClosed=True, color=self.border_color, thickness=self.border_thickness)
+            cv2.drawContours(image, [points], 0, self.border_color, self.border_thickness)
