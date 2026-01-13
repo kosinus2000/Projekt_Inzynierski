@@ -62,19 +62,6 @@ class Encoder_conv(Model):
         return decoded
 
 
-autoencoder_conv = Encoder_conv()
-autoencoder_conv.compile(optimizer='adam', loss='BinaryCrossentropy',metrics=['accuracy'])
-
-x_train, x_test = load_data()
-history = autoencoder_conv.fit(x_train, x_train,
-                               epochs=15,
-                               shuffle=True,
-                               callbacks=[callback],
-                               validation_data=(x_test, x_test))
-len(history.history['loss'])
-autoencoder_conv.evaluate(x_test, x_test, verbose=2)
-encoded_imgs = autoencoder_conv(x_test).numpy()
-decoded_imgs =autoencoder_conv(encoded_imgs).numpy()
 
 
 
