@@ -2,7 +2,7 @@ import math
 import random
 
 
-def poisson_sampling(width, height, r, k=30):
+def poisson_sampling(width, height, r = 5, k=30):
     """
     Generates a set of points following the Poisson disk sampling algorithm within the specified dimensions.
     This method ensures that no two points are closer than a given minimum radius 'r', offering a uniform
@@ -90,4 +90,4 @@ def poisson_sampling(width, height, r, k=30):
         if not flag:
             active_list.pop(idx)
 
-    return points
+    return [[int(p[0]), int(p[1])] for p in points]

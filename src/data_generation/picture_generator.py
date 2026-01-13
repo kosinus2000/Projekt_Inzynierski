@@ -1,10 +1,31 @@
+"""
+Generates and manipulates images using various nucleus generation methods.
+
+This module provides functions to create images containing simulated cell nucleus
+shapes, represented through different sampling techniques, alignments, and grid
+layouts. The module is built to support visualizations and simulations in the context
+of cell and nucleus distributions.
+
+Classes:
+    None
+
+Functions:
+    generate_picture_with_Poisson_sampling: Produces an image using Poisson sampling.
+    generate_picture_with_rows_and_columns: Organizes generated pictures into a grid.
+    generate_image_with_random_alignment: Creates an image with randomly distributed
+        nuclei shapes.
+    show_image: Displays a given image in a separate window.
+    create_slide_image: Constructs a slide-like image by layering random distributions
+        of healthy and cancerous nuclei.
+
+"""
 import random
+
 import cv2
 import numpy as np
 
-import src
 from src.functions.ellipse_params import ellipse_proportion, cell_size, cell_size_proportionally
-from src.utils.classes.cancer_nucleus import CancerNucleus
+from src.utils.classes.cancer_nucleus import CancerNucleusOld
 from src.functions.poisson_sampling import poisson_sampling
 
 
@@ -42,12 +63,12 @@ def generate_picture_with_Poisson_sampling(width: int = 500, height: int = 500, 
         center = (int(center_point[0]), int(center_point[1]))
         axes = (int(axes[0]), int(axes[1]))
 
-        (CancerNucleus(center=center_point,
-                      axes= axes,
-                      angle = angle,
-                      thickness = -1,
-                      irregularity=0.1,
-                      border_thickness=1)
+        (CancerNucleusOld(center=center_point,
+                          axes= axes,
+                          angle = angle,
+                          thickness = -1,
+                          irregularity=0.1,
+                          border_thickness=1)
          .draw_nuclei(image))
     return image
 
@@ -109,12 +130,12 @@ def generate_image_with_random_aligment(width: int = 128, height: int = 128,  ):
         axes = ellipse_proportion(cell_size)
         angle = random.randint(0, 360)
 
-        (CancerNucleus(center=center,
-                      axes=axes,
-                      angle=angle,
-                      thickness=-1,
-                      irregularity=0.1,
-                      border_thickness=1)
+        (CancerNucleusOld(center=center,
+                          axes=axes,
+                          angle=angle,
+                          thickness=-1,
+                          irregularity=0.1,
+                          border_thickness=1)
          .draw_nuclei(image))
 
     return image
