@@ -33,10 +33,10 @@ class AxesConfig:
 @dataclass
 class DistributionConfig:
     algorithm: str = "poisson"
-    number_of_points: int = 10
+    number_of_points: int = 15
     radius: int = 30
     k: int = 35
-    deviation: int = 40
+    deviation: int = 5
     cell_size: Optional[int] = None
     num_clusters: Optional[int] = None
 

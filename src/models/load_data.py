@@ -1,6 +1,11 @@
-def load_data():
-    (x_train)  = set_generator_with_random_aligment(5000)
-    (x_test) = set_generator_with_random_aligment(1000)
+import numpy as np
+
+from data_generation.data_generator import set_generator_with_random_aligment
+
+
+def load_data(obj):
+    (x_train)  = obj
+    (x_test) = obj
     x_train = np.array(x_train, dtype='float32') / 255.
     x_test = np.array(x_test, dtype='float32') / 255.
 

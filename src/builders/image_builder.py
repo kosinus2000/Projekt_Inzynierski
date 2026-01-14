@@ -39,7 +39,7 @@ class ImageGenerator:
         return self
 
     def with_gaussian_distribution(
-        self, num_points: int = 10, deviation: int = 40
+        self, num_points: int = 10, deviation: int = 5
     ) -> "ImageGenerator":
         self.config.distribution.algorithm = "gaussian"
         self.config.distribution.number_of_points = num_points
@@ -55,7 +55,7 @@ class ImageGenerator:
         return self
 
     def with_clustered_distribution(
-        self, num_points: int = 10, num_clusters: Optional[int] = None, deviation: int = 40
+        self, num_points: int = 10, num_clusters: Optional[int] = None, deviation: int = 5
     ) -> "ImageGenerator":
         self.config.distribution.algorithm = "clustered"
         self.config.distribution.number_of_points = num_points
@@ -114,12 +114,16 @@ class ImageGenerator:
         if cfg.algorithm == "poisson":
             return PoissonAlgorithmCenterGenerator(w, h, cfg.radius, cfg.k)
         elif cfg.algorithm == "gaussian":
-            return GaussianAlgorithmCenterGenerator(w, h, cfg.number_of_points, cfg.deviation)
+            return GaussianAlgorithmCenterGenerator(
+                w, h, cfg.number_of_points, cfg.deviation, cfg.deviation
+            )
         elif cfg.algorithm == "random":
-            return RandomAlignmentCenterGenerator(w, h, cfg.number_of_points, cfg.cell_size or 10)
+            return RandomAlignmentCenterGenerator(
+                w, h, cfg.number_of_points, cfg.cell_size or 10, cfg.deviation
+            )
         elif cfg.algorithm == "clustered":
             return ClusteredAlgorithmCenterGenerator(
-                w, h, cfg.number_of_points, cfg.num_clusters, cfg.deviation
+                w, h, cfg.number_of_points, cfg.num_clusters, cfg.deviation, cfg.deviation
             )
         raise ValueError(f"Unknown distribution algorithm: {cfg.algorithm}")
 

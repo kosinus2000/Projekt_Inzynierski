@@ -50,6 +50,8 @@ class CancerNucleusOld(NucleiOld):
         Args:
             image (numpy.ndarray): The input image on which the nuclei shapes are drawn.
         """
+        if self.center is None or self.axes is None:
+            return
         cx, cy = self.center
         ax, ay = self.axes
         angle = np.deg2rad(self.angle)
@@ -139,7 +141,7 @@ class CancerNucleus(Nuclei):
 
             perlin_value = noise.pnoise1(t * 2.0,
                                          octaves=4,
-                                         persistence=0.5,
+                                         persistence=0.9,
                                          lacunarity=3.0,
                                          repeat=1024,
                                          base=self.seed)
