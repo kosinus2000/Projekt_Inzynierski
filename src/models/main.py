@@ -52,6 +52,6 @@ def run_experiment():
     visualize_output(x_test, decoded_imgs, 10)
 
 
-run_experiment()
+
 
 
