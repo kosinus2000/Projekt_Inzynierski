@@ -33,7 +33,7 @@ class AxesConfig:
 @dataclass
 class DistributionConfig:
     algorithm: str = "poisson"
-    number_of_points: int = 15
+    number_of_points: int = 10
     radius: int = 30
     k: int = 35
     deviation: int = 5
