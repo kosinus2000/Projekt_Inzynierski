@@ -258,14 +258,16 @@ class ClusteredAlgorithmCenterGenerator(CenterPointsGenerator):
                  size_x: int,
                  size_y: int,
                  number_of_points: int,
-                 num_clusters=None,
+                 num_clusters: int = None,
                  dev: int = 40,
-                 points_deviation: int = 15,
+                 points_deviation: int = None,
                  min_distance: int = 15):
         super().__init__(size_x, size_y, number_of_points)
+        if number_of_points <= 0:
+            raise ValueError("number_of_points must be greater than 0")
         self.num_clusters = num_clusters if num_clusters is not None else random.randint(3, 9)
         self.dev = dev
-        self.points_deviation = points_deviation
+        self.points_deviation = points_deviation if points_deviation is not None else max(1, int(self.number_of_points * 0.2))
         self.min_distance = min_distance
 
     def _is_valid(self, new_point, existing_points):

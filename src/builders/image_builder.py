@@ -115,7 +115,7 @@ class ImageGenerator:
             return PoissonAlgorithmCenterGenerator(w, h, cfg.radius, cfg.k)
         elif cfg.algorithm == "gaussian":
             return GaussianAlgorithmCenterGenerator(
-                w, h, cfg.number_of_points, cfg.deviation, cfg.deviation
+                w, h, cfg.number_of_points, cfg.deviation, 0
             )
         elif cfg.algorithm == "random":
             return RandomAlignmentCenterGenerator(
@@ -123,8 +123,9 @@ class ImageGenerator:
             )
         elif cfg.algorithm == "clustered":
             return ClusteredAlgorithmCenterGenerator(
-                w, h, cfg.number_of_points, cfg.num_clusters, cfg.deviation, cfg.deviation
+                w, h, cfg.number_of_points, cfg.num_clusters, cfg.deviation
             )
+        raise ValueError(f"Unknown distribution algorithm: {cfg.algorithm}")
         raise ValueError(f"Unknown distribution algorithm: {cfg.algorithm}")
 
     def _create_axes_strategy(self) -> Axes:
@@ -146,21 +147,29 @@ class ImageGenerator:
         point_gen.prepare_iterator()
         axes_gen = self._create_axes_strategy()
         use_perlin = self.config.nucleus.use_perlin_noise
+        cell_count = 0
+        max_cells = 1000
 
-        while True:
+        while cell_count < max_cells:
             try:
                 if self.config.composition.include_healthy_cells and random.random() < 0.5:
-                    cell = HealthyNucleus(point_gen, axes_gen)
+                    cell = HealthyNucleus(point_gen, axes_gen,
+                                        color=self.config.nucleus.base_color,
+                                        border_color=self.config.nucleus.border_color,
+                                        border_thickness=self.config.nucleus.border_thickness)
                 else:
                     cell = CancerNucleus(
-                        point_gen, axes_gen, irregularity=self.config.nucleus.irregularity
+                        point_gen, axes_gen, irregularity=self.config.nucleus.irregularity,
+                        color=self.config.nucleus.base_color,
+                        border_color=self.config.nucleus.border_color,
+                        border_thickness=self.config.nucleus.border_thickness
                     )
 
-                # Perlin noise disabled due to OpenCV memory issues on Windows
-                # if use_perlin and isinstance(cell, CancerNucleus):
-                #     cell.draw_nuclei_with_perlin_noise(image)
-                # else:
-                cell.draw_nuclei(image)
+                if use_perlin and isinstance(cell, CancerNucleus):
+                    cell.draw_nuclei_with_perlin_noise(image)
+                else:
+                    cell.draw_nuclei(image)
+                cell_count += 1
             except ValueError:
                 break
 

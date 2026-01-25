@@ -15,7 +15,7 @@ class NucleusConfig:
     border_color: Tuple[int, int, int] = (107, 26, 121)
     border_thickness: int = 2
     thickness: int = -1
-    irregularity: float = 0.3
+    irregularity: float = 1.1
     color_variation_std: float = 20.0
     use_perlin_noise: bool = False
 
@@ -36,7 +36,7 @@ class DistributionConfig:
     number_of_points: int = 10
     radius: int = 30
     k: int = 35
-    deviation: int = 5
+    deviation: int = 4
     cell_size: Optional[int] = None
     num_clusters: Optional[int] = None
 
