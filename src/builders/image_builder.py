@@ -39,7 +39,7 @@ class ImageGenerator:
         return self
 
     def with_gaussian_distribution(
-        self, num_points: int = 10, deviation: int = 5
+        self, num_points: int = 10, deviation: int = 50
     ) -> "ImageGenerator":
         self.config.distribution.algorithm = "gaussian"
         self.config.distribution.number_of_points = num_points
@@ -114,8 +114,9 @@ class ImageGenerator:
         if cfg.algorithm == "poisson":
             return PoissonAlgorithmCenterGenerator(w, h, cfg.radius, cfg.k)
         elif cfg.algorithm == "gaussian":
+            dev = 50 if cfg.deviation == 4 else cfg.deviation
             return GaussianAlgorithmCenterGenerator(
-                w, h, cfg.number_of_points, cfg.deviation, 0
+                w, h, cfg.number_of_points, dev, 0
             )
         elif cfg.algorithm == "random":
             return RandomAlignmentCenterGenerator(
