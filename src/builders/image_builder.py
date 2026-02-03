@@ -68,11 +68,14 @@ class ImageGenerator:
         irregularity: float = 0.3,
         color: Optional[tuple] = None,
         border_thickness: int = 2,
+        border_color: Optional[tuple] = None,
     ) -> "ImageGenerator":
         self.config.nucleus.irregularity = irregularity
         if color:
             self.config.nucleus.base_color = color
         self.config.nucleus.border_thickness = border_thickness
+        if border_color:
+            self.config.nucleus.border_color = border_color
         return self
 
     def with_perlin_noise(self, enabled: bool = True) -> "ImageGenerator":
@@ -89,11 +92,16 @@ class ImageGenerator:
         return self
 
     def with_healthy_cells(
-        self, enabled: bool = True, color: Optional[tuple] = None
+        self, enabled: bool = True, color: Optional[tuple] = None, border_color: Optional[tuple] = None
     ) -> "ImageGenerator":
         self.config.composition.include_healthy_cells = enabled
         if color and self.config.composition.healthy_config is None:
             self.config.composition.healthy_config = NucleusConfig(base_color=color)
+        if border_color:
+            if self.config.composition.healthy_config is None:
+                self.config.composition.healthy_config = NucleusConfig(border_color=border_color)
+            else:
+                self.config.composition.healthy_config.border_color = border_color
         return self
 
     def with_custom_distribution(self, generator: CenterPointsGenerator) -> "ImageGenerator":
