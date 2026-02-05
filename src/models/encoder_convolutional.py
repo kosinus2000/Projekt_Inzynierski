@@ -9,26 +9,26 @@ class Encoder_conv(Model):
         super().__init__()
 
         self.encoder = tf.keras.Sequential([
-            layers.InputLayer(shape=(128, 128, 3)),
+            layers.InputLayer(shape=(128, 128, 3)), # wymiary zdjęcia i 3 kolory RGB
 
             layers.Conv2D(16, (3, 3), padding='same'),
             layers.BatchNormalization(),
-            layers.LeakyReLU(negative_slope=0.2),
+            layers.LeakyReLU(negative_slope=0.1),
             layers.MaxPooling2D((2, 2)),
 
             layers.Conv2D(32, (3, 3), padding='same'),
             layers.BatchNormalization(),
-            layers.LeakyReLU(negative_slope=0.2),
+            layers.LeakyReLU(negative_slope=0.1),
             layers.MaxPooling2D((2, 2)),
 
             layers.Conv2D(64, (3, 3), padding='same'),
             layers.BatchNormalization(),
-            layers.LeakyReLU(negative_slope=0.2),
+            layers.LeakyReLU(negative_slope=0.1),
             layers.MaxPooling2D((2, 2)),
 
             layers.Conv2D(128, (3, 3), padding='same'),
             layers.BatchNormalization(),
-            layers.LeakyReLU(negative_slope=0.2)
+            layers.LeakyReLU(negative_slope=0.1)
         ])
 
         self.decoder = tf.keras.Sequential([
@@ -36,22 +36,22 @@ class Encoder_conv(Model):
 
             layers.Conv2D(128, (3, 3), padding='same'),
             layers.BatchNormalization(),
-            layers.LeakyReLU(negative_slope=0.2),
+            layers.LeakyReLU(negative_slope=0.1),
             layers.UpSampling2D((2, 2)),
 
             layers.Conv2D(64, (3, 3), padding='same'),
             layers.BatchNormalization(),
-            layers.LeakyReLU(negative_slope=0.2),
+            layers.LeakyReLU(negative_slope=0.1),
             layers.UpSampling2D((2, 2)),
 
             layers.Conv2D(32, (3, 3), padding='same'),
             layers.BatchNormalization(),
-            layers.LeakyReLU(negative_slope=0.2),
+            layers.LeakyReLU(negative_slope=0.1),
             layers.UpSampling2D((2, 2)),
 
             layers.Conv2D(16, (3, 3), padding='same'),
             layers.BatchNormalization(),
-            layers.LeakyReLU(negative_slope=0.2),
+            layers.LeakyReLU(negative_slope=0.1),
 
             layers.Conv2D(3, (3, 3), activation='sigmoid', padding='same')
         ])
