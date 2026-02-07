@@ -61,6 +61,7 @@ class ImageGenerator:
         self.config.distribution.number_of_points = num_points
         self.config.distribution.num_clusters = num_clusters
         self.config.distribution.deviation = deviation
+
         return self
 
     def with_cancer_cells(
@@ -69,6 +70,7 @@ class ImageGenerator:
         color: Optional[tuple] = None,
         border_thickness: int = 2,
         border_color: Optional[tuple] = None,
+        random_colors: bool = False,
     ) -> "ImageGenerator":
         self.config.nucleus.irregularity = irregularity
         if color:
@@ -76,6 +78,7 @@ class ImageGenerator:
         self.config.nucleus.border_thickness = border_thickness
         if border_color:
             self.config.nucleus.border_color = border_color
+        self.config.nucleus.random_colors = random_colors
         return self
 
     def with_perlin_noise(self, enabled: bool = True) -> "ImageGenerator":
@@ -163,14 +166,14 @@ class ImageGenerator:
             try:
                 if self.config.composition.include_healthy_cells and random.random() < 0.5:
                     cell = HealthyNucleus(point_gen, axes_gen,
-                                        color=self.config.nucleus.base_color,
-                                        border_color=self.config.nucleus.border_color,
+                                        color=self.config.nucleus.base_color if not self.config.nucleus.random_colors else None,
+                                        border_color=self.config.nucleus.border_color if not self.config.nucleus.random_colors else None,
                                         border_thickness=self.config.nucleus.border_thickness)
                 else:
                     cell = CancerNucleus(
                         point_gen, axes_gen, irregularity=self.config.nucleus.irregularity,
-                        color=self.config.nucleus.base_color,
-                        border_color=self.config.nucleus.border_color,
+                        color=self.config.nucleus.base_color if not self.config.nucleus.random_colors else None,
+                        border_color=self.config.nucleus.border_color if not self.config.nucleus.random_colors else None,
                         border_thickness=self.config.nucleus.border_thickness
                     )
 

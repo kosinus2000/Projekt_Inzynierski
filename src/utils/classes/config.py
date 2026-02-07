@@ -18,6 +18,7 @@ class NucleusConfig:
     irregularity: float = 1.1
     color_variation_std: float = 20.0
     use_perlin_noise: bool = False
+    random_colors: bool = False
 
 
 @dataclass

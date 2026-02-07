@@ -11,13 +11,14 @@ def generate_image(
     algorithm: str = "poisson",
     irregularity: float = 0.3,
     use_perlin_noise: bool = False,
+    random_colors: bool = False,
     show: bool = False,
     ) -> np.ndarray:
 
     generator = ImageGenerator()
 
     generator.with_size(width, height)
-    generator.with_cancer_cells(irregularity=irregularity)
+    generator.with_cancer_cells(irregularity=irregularity, random_colors=random_colors)
 
     if algorithm == "poisson":
         generator.with_poisson_distribution()
@@ -41,11 +42,12 @@ def generate_batch(
     algorithm: str = "poisson",
     irregularity: float = 0.3,
     use_perlin_noise: bool = False,
+    random_colors: bool = False,
     ) -> list:
     generator = ImageGenerator()
 
     generator.with_size(width, height)
-    generator.with_cancer_cells(irregularity=irregularity)
+    generator.with_cancer_cells(irregularity=irregularity, random_colors=random_colors)
 
     if algorithm == "poisson":
         generator.with_poisson_distribution()

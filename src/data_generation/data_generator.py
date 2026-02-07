@@ -3,7 +3,7 @@ from src.data_generation.single_cell_generator import calculate_axes_size_from_i
 import numpy as np
 
 
-def set_generator(num_pictures : int, size_x : int = 28, size_y : int = 28):
+def set_generator(num_pictures : int, size_x : int = 28, size_y : int = 28, random_colors: bool = False):
     """
     Generates a list of pictures by calling a single cell image generator function multiple times.
 
@@ -14,6 +14,7 @@ def set_generator(num_pictures : int, size_x : int = 28, size_y : int = 28):
         num_pictures (int): Number of pictures to generate.
         size_x (int): Width of each image in pixels. Defaults to 28.
         size_y (int): Height of each image in pixels. Defaults to 28.
+        random_colors (bool): If True, generates random color variations for the nucleus.
 
     Returns:
         list: A list of generated images.
@@ -21,7 +22,7 @@ def set_generator(num_pictures : int, size_x : int = 28, size_y : int = 28):
     list_of_pictures = []
 
     for _ in range(num_pictures):
-        image = single_cell_generator_with_return_image(size_x, size_y)
+        image = single_cell_generator_with_return_image(size_x, size_y, random_colors)
         list_of_pictures.append(image)
 
     return list_of_pictures

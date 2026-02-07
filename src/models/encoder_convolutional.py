@@ -26,6 +26,11 @@ class Encoder_conv(Model):
             layers.LeakyReLU(negative_slope=0.1),
             layers.MaxPooling2D((2, 2)),
 
+            # layers.Conv2D(96, (3,3), padding='same'),
+            # layers.BatchNormalization(),
+            # layers.LeakyReLU(negative_slope=0.1),
+            # layers.UpSampling2D((2, 2)),
+
             layers.Conv2D(128, (3, 3), padding='same'),
             layers.BatchNormalization(),
             layers.LeakyReLU(negative_slope=0.1)
@@ -38,6 +43,11 @@ class Encoder_conv(Model):
             layers.BatchNormalization(),
             layers.LeakyReLU(negative_slope=0.1),
             layers.UpSampling2D((2, 2)),
+
+            # layers.Conv2D(96, (3, 3), padding='same'),
+            # layers.BatchNormalization(),
+            # layers.LeakyReLU(negative_slope=0.1),
+            # layers.UpSampling2D((2, 2)),
 
             layers.Conv2D(64, (3, 3), padding='same'),
             layers.BatchNormalization(),

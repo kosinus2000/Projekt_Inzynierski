@@ -35,14 +35,19 @@ class HealthyNucleus(Nuclei):
     def __init__(self, point_generator_instance,
                  axes_generator_instance,
                  color = None,
+                 border_color = None,
                  **kwargs):
         if color is None:
             color = generate_color_variation_normal((160, 83, 179))
+
+        if border_color is None:
+            border_color = generate_color_variation_normal((107, 26, 121))
 
         super().__init__(
             point_generator_instance=point_generator_instance,
             axes_generator_instance=axes_generator_instance,
             color=color,
+            border_color=border_color,
             **kwargs
         )
 
