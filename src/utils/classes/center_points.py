@@ -79,7 +79,7 @@ class CenterPointsGenerator(ABC):
         """
         self._points = self.generate_points()
         self._iterator = iter(self._points)
-        print(f"Generated {len(self._points)} centers")
+       # print(f"Generated {len(self._points)} centers")
 
     def get_next_point(self):
         """
