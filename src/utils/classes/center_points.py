@@ -169,8 +169,7 @@ class GaussianAlgorithmCenterGenerator(CenterPointsGenerator):
 
     def generate_points(self):
         points = []
-        
-        # Use NormalPointGenerator to randomize the number of points
+
         point_generator = NormalPointGenerator(self.number_of_points, self.points_deviation)
         actual_number_of_points = point_generator.calculate_number_of_points()
         
@@ -225,8 +224,7 @@ class RandomAlignmentCenterGenerator(CenterPointsGenerator):
 
     def generate_points(self):
         points = []
-        
-        # Use UniformPointGenerator to randomize the number of points
+
         point_generator = UniformPointGenerator(self.number_of_points, self.points_deviation)
         actual_number_of_points = point_generator.calculate_number_of_points()
         

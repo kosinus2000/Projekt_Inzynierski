@@ -1,8 +1,7 @@
 import numpy as np
-from typing import Optional
 
 from src.builders.image_builder import ImageGenerator
-from src.utils.classes.config import GenerationConfig
+from builders.config import GenerationConfig
 
 
 def generate_image(

@@ -18,7 +18,7 @@ from src.utils.classes.center_points import (
 )
 from src.utils.classes.cancer_nucleus import CancerNucleus
 from src.utils.classes.healthy_nucleus import HealthyNucleus
-from src.utils.classes.config import GenerationConfig, NucleusConfig
+from builders.config import GenerationConfig, NucleusConfig
 
 
 class ImageGenerator:
