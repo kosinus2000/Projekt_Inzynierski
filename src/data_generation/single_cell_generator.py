@@ -1,6 +1,6 @@
 import numpy as np
 import cv2
-
+import matplotlib.pyplot as plt
 from src.functions.ellipse_params import calculate_center_of_image, calculate_axes_size_from_image_size
 from src.utils.cell_settings import border_line_thickness, generate_color_variation_normal
 from src.utils.classes.cancer_nucleus import CancerNucleusOld
@@ -41,9 +41,9 @@ def single_cell_generator_with_open_window(size_x: int, size_y: int, random_colo
                                       border_thickness=border_line_thickness(size_x, size_y))
 
     cancer_nucleus.draw_nuclei(image)
-    cv2.imshow('Nucleus',image)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    plt.imshow(image)
+    plt.axis('off')  # usuwa osie
+    plt.show()
 
 
 def single_cell_generator_with_return_image(size_x: int, size_y: int, random_colors: bool = False):

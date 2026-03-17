@@ -25,9 +25,9 @@ def print_summary(mse_anomaly,mse_healthy):
 def print_summary_advanced(mse_anomaly, mse_healthy):
     # Statystyki opisowe
     print(
-        f"Zdrowe - Średnia: {np.mean(mse_healthy):.5f}, Mediana: {np.median(mse_healthy):.5f}, Max: {np.max(mse_healthy):.5f}")
+        f"Zdrowe - Średnia: {np.mean(mse_healthy):.5f}, Mediana: {np.median(mse_healthy):.5f}, Min: {np.min(mse_healthy):.5f}, Max: {np.max(mse_healthy):.5f}, STD: {np.std(mse_healthy):.5f}" )
     print(
-        f"Anomalie - Średnia: {np.mean(mse_anomaly):.5f}, Mediana: {np.median(mse_anomaly):.5f}, Max: {np.max(mse_anomaly):.5f}")
+        f"Anomalie - Średnia: {np.mean(mse_anomaly):.5f}, Mediana: {np.median(mse_anomaly):.5f}, Min: {np.min(mse_anomaly):.5f}, Max: {np.max(mse_anomaly):.5f}, STD: {np.std(mse_anomaly):.5f}")
 
     # Obliczanie AUC
     y_true = np.concatenate([np.zeros(len(mse_healthy)), np.ones(len(mse_anomaly))])
@@ -79,43 +79,41 @@ def generate_report(anomaly_data, decoded_anomaly_data, mse_ano, mse_test_per_im
 
     print('------------------------------------------------------------------------------------------------')
 
-
-    idx = random.randint(0, len(local_otsu_results)-1)
-
-    curr_org = anomaly_data[idx]
-    curr_dec = decoded_anomaly_data[idx]
-
-
-    idx_thresh = local_otsu_results[idx]['threshold']
-    idx_mask = local_otsu_results[idx]['mask']
-    idx_err = local_otsu_results[idx]['error_map']
-
     sns.set_theme(style="whitegrid")
-    plt.figure(figsize=(20, 5))
-    plt.subplot(1,4,1)
-    plt.title("Obraz wejściowy", fontsize=14)
-    plt.imshow(curr_org)
-    plt.axis('off')
+    fig, axes = plt.subplots(3, 4, figsize=(20, 15))
 
+    # Losuj 3 różne indeksy
+    indices = random.sample(range(len(local_otsu_results)), 3)
 
-    plt.subplot(1,4,2)
-    plt.title('Rekonstrukcja', fontsize=14)
-    plt.imshow(curr_dec)
-    plt.axis('off')
+    for row, idx in enumerate(indices):
+        curr_org = anomaly_data[idx]
+        curr_dec = decoded_anomaly_data[idx]
+        idx_thresh = local_otsu_results[idx]['threshold']
+        idx_mask = local_otsu_results[idx]['mask']
+        idx_err = local_otsu_results[idx]['error_map']
 
+        axes[row, 0].imshow(curr_org)
+        axes[row, 0].axis('off')
+        if row == 0:
+            axes[row, 0].set_title("Obraz wejściowy", fontsize=14)
 
-    plt.subplot(1,4,3)
-    plt.imshow(idx_err, cmap='inferno')
-    plt.title("Mapa Błędu (Różnica)", fontsize=14)
-    plt.axis('off')
+        axes[row, 1].imshow(curr_dec)
+        axes[row, 1].axis('off')
+        if row == 0:
+            axes[row, 1].set_title("Rekonstrukcja", fontsize=14)
 
-    plt.subplot(1,4,4)
+        axes[row, 2].imshow(idx_err, cmap='inferno')
+        axes[row, 2].axis('off')
+        if row == 0:
+            axes[row, 2].set_title("Mapa Błędu (Różnica)", fontsize=14)
 
-    plt.imshow(curr_org)
-    plt.imshow(idx_mask, cmap='gray')
-
-    plt.title(f"Maska Anomalii Próg: {idx_thresh:.1f}", fontsize=14)
-    plt.axis('off')
+        axes[row, 3].imshow(curr_org)
+        axes[row, 3].imshow(idx_mask, cmap='gray')
+        axes[row, 3].axis('off')
+        if row == 0:
+            axes[row, 3].set_title(f"Maska Anomalii Próg: {idx_thresh:.1f}", fontsize=14)
+        else:
+            axes[row, 3].set_title(f"Próg: {idx_thresh:.1f}", fontsize=12)
 
     plt.tight_layout()
     plt.show()
