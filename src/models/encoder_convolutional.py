@@ -1,71 +1,68 @@
 import tensorflow as tf
-import numpy as np
-import matplotlib.pyplot as plt
-from keras import losses
 
 from tensorflow.keras import layers
 from tensorflow.keras.models import Model
 
-from src.data_generation.data_generator import set_generator_with_random_aligment
-from visualization.visualize_output import visualize_output
-
-
-def load_data():
-    (x_train)  = set_generator_with_random_aligment(5000)
-    (x_test) = set_generator_with_random_aligment(1000)
-    x_train = np.array(x_train, dtype='float32') / 255.
-    x_test = np.array(x_test, dtype='float32') / 255.
-
-    return x_train, x_test
+solope = 0.2
 
 class Encoder_conv(Model):
     def __init__(self):
         super().__init__()
 
         self.encoder = tf.keras.Sequential([
-            layers.InputLayer(input_shape=(128, 128, 3)),
+            layers.InputLayer(shape=(128, 128, 3)), # wymiary zdjęcia i 3 kolory RGB
 
             layers.Conv2D(16, (3, 3), padding='same'),
             layers.BatchNormalization(),
-            layers.LeakyReLU(alpha=0.2),
+            layers.LeakyReLU(negative_slope=solope),
             layers.MaxPooling2D((2, 2)),
 
             layers.Conv2D(32, (3, 3), padding='same'),
             layers.BatchNormalization(),
-            layers.LeakyReLU(alpha=0.2),
+            layers.LeakyReLU(negative_slope=solope),
             layers.MaxPooling2D((2, 2)),
 
             layers.Conv2D(64, (3, 3), padding='same'),
             layers.BatchNormalization(),
-            layers.LeakyReLU(alpha=0.2),
+            layers.LeakyReLU(negative_slope=solope),
             layers.MaxPooling2D((2, 2)),
+
+            # layers.Conv2D(96, (3,3), padding='same'),
+            # layers.BatchNormalization(),
+            # layers.LeakyReLU(negative_slope=solope),
+            # layers.UpSampling2D((2, 2)),
 
             layers.Conv2D(128, (3, 3), padding='same'),
             layers.BatchNormalization(),
-            layers.LeakyReLU(alpha=0.2)
+            layers.LeakyReLU(negative_slope=solope)
         ])
 
         self.decoder = tf.keras.Sequential([
-            layers.InputLayer(input_shape=(16, 16, 128)),
+            layers.InputLayer(shape=(16, 16, 128)),
 
             layers.Conv2D(128, (3, 3), padding='same'),
             layers.BatchNormalization(),
-            layers.LeakyReLU(alpha=0.2),
+            layers.LeakyReLU(negative_slope=0.2),
             layers.UpSampling2D((2, 2)),
+
+            # layers.Conv2D(96, (3, 3), padding='same'),
+            # layers.BatchNormalization(),
+            # layers.LeakyReLU(negative_slope=solope),
+            # layers.UpSampling2D((2, 2)),
 
             layers.Conv2D(64, (3, 3), padding='same'),
             layers.BatchNormalization(),
-            layers.LeakyReLU(alpha=0.2),
+            layers.LeakyReLU(negative_slope=0.2),
             layers.UpSampling2D((2, 2)),
 
             layers.Conv2D(32, (3, 3), padding='same'),
             layers.BatchNormalization(),
-            layers.LeakyReLU(alpha=0.2),
+            layers.LeakyReLU(negative_slope=0),
             layers.UpSampling2D((2, 2)),
 
             layers.Conv2D(16, (3, 3), padding='same'),
             layers.BatchNormalization(),
-            layers.LeakyReLU(alpha=0.2),
+            layers.LeakyReLU(negative_slope=solope),
 
             layers.Conv2D(3, (3, 3), activation='sigmoid', padding='same')
         ])
@@ -76,25 +73,8 @@ class Encoder_conv(Model):
         return decoded
 
 
-autoencoder_conv = Encoder_conv()
-autoencoder_conv.compile(optimizer='adam', loss='BinaryCrossentropy',metrics=['accuracy'])
 
-x_train, x_test = load_data()
-autoencoder_conv.fit(x_train, x_train,
-                     epochs=15,
-                     shuffle=True,
-                     validation_data=(x_test, x_test))
 
-encoded_imgs = autoencoder_conv.encoder(x_test).numpy()
-decoded_imgs = autoencoder_conv.decoder(encoded_imgs).numpy()
 
-def print_diag():
-    print("--- DIAGNOSTYKA ---")
-    test_loss, test_acc = autoencoder_conv.evaluate(x_test, x_test, verbose=2)
-    print(f'Test accuracy: {test_acc*100:.2f}%')
-    print(f"Input Min: {x_test.min()}, Max: {x_test.max()}, Mean: {x_test.mean()}")
-    print(f"Output Min: {decoded_imgs.min()}, Max: {decoded_imgs.max()}, Mean: {decoded_imgs.mean()}")
 
-n = 10
-visualize_output(x_test, decoded_imgs, n)
 

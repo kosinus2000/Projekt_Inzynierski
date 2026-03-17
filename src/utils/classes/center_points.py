@@ -1,6 +1,10 @@
 import random
 from abc import ABC, abstractmethod
+
+import numpy as np
+
 from src.functions.poisson_sampling import poisson_sampling
+from src.utils.classes.numbers_of_points import UniformPointGenerator, NormalPointGenerator
 
 
 class CenterPointsGenerator(ABC):
@@ -75,7 +79,7 @@ class CenterPointsGenerator(ABC):
         """
         self._points = self.generate_points()
         self._iterator = iter(self._points)
-        print(f"Generated {len(self._points)} centers")
+       # print(f"Generated {len(self._points)} centers")
 
     def get_next_point(self):
         """
@@ -150,21 +154,29 @@ class GaussianAlgorithmCenterGenerator(CenterPointsGenerator):
     dev : int
         The deviation factor for the Gaussian distribution, affecting how spread out
         the points are around the central area.
+    points_deviation : int
+        The deviation for randomizing the number of points generated.
     """
     def __init__(self,
                  size_x: int,
                  size_y: int,
                  number_of_points: int,
-                 dev: int):
+                 dev: int,
+                 points_deviation: int = 0):
         super().__init__(size_x, size_y, number_of_points)
         self.dev = dev
+        self.points_deviation = points_deviation
 
     def generate_points(self):
         points = []
+
+        point_generator = NormalPointGenerator(self.number_of_points, self.points_deviation)
+        actual_number_of_points = point_generator.calculate_number_of_points()
+        
         center_x = self.size_x / 2
         center_y = self.size_y / 2
 
-        for _ in range(self.number_of_points):
+        for _ in range(actual_number_of_points):
             x = random.gauss(center_x, self.dev)
             y = random.gauss(center_y, self.dev)
 
@@ -197,18 +209,26 @@ class RandomAlignmentCenterGenerator(CenterPointsGenerator):
     cell_size : int
         Defines the size of the constrained areas affecting the alignment
         of randomly generated points.
+    points_deviation : int
+        The deviation for randomizing the number of points generated.
     """
     def __init__(self,
                  size_x: int,
                  size_y: int,
                  number_of_points: int,
-                 cell_size: int):
+                 cell_size: int,
+                 points_deviation: int = 0):
         super().__init__(size_x, size_y, number_of_points )
         self.cell_size = cell_size
+        self.points_deviation = points_deviation
 
     def generate_points(self):
         points = []
-        for _ in range(self.number_of_points):
+
+        point_generator = UniformPointGenerator(self.number_of_points, self.points_deviation)
+        actual_number_of_points = point_generator.calculate_number_of_points()
+        
+        for _ in range(actual_number_of_points):
             x = random.uniform(4 + self.cell_size, self.size_x - self.cell_size - 4)
             y = random.uniform(4 + self.cell_size, self.size_y - self.cell_size - 4)
             points.append((int(x), int(y)))
@@ -219,49 +239,55 @@ class RandomAlignmentCenterGenerator(CenterPointsGenerator):
 class ClusteredAlgorithmCenterGenerator(CenterPointsGenerator):
     """
     Represents a clustered algorithm for generating points in a 2D space.
-
-    This class generates a specified number of points clustered around randomly
-    distributed centers within the 2D space. It inherits from the base
-    `CenterPointsGenerator` class and enhances its functionality by introducing
-    clusters with configurable deviation for point distribution.
+    Introduces a repulsion mechanism to ensure points do not overlap.
 
     Attributes
     ----------
     num_clusters : int
-        The number of clusters to generate within the 2D space. If not specified,
-        a random value is assigned between 3 and 9 inclusive.
+        The number of clusters to generate.
     dev : int
-        The
-         standard deviation determining the spread of points around each
-        cluster center.
+        The standard deviation for point spread around cluster centers.
+    points_deviation : int
+        The deviation for randomizing the total number of points.
+    min_distance : int
+        The minimum allowed distance between any two points.
     """
-    def __init__(self
-                 , size_x: int
-                 , size_y: int
-                 , number_of_points: int
-                 , num_clusters = None,
-                 dev: int =40):
+    def __init__(self,
+                 size_x: int,
+                 size_y: int,
+                 number_of_points: int,
+                 num_clusters: int = None,
+                 dev: int = 40,
+                 points_deviation: int = None,
+                 min_distance: int = 15):
         super().__init__(size_x, size_y, number_of_points)
-        self.num_clusters = num_clusters
+        if number_of_points <= 0:
+            raise ValueError("number_of_points must be greater than 0")
+        self.num_clusters = num_clusters if num_clusters is not None else random.randint(3, 9)
         self.dev = dev
+        self.points_deviation = points_deviation if points_deviation is not None else max(1, int(self.number_of_points * 0.2))
+        self.min_distance = min_distance
 
-        if num_clusters is None:
-            self.num_clusters = random.randint(3, 9)
+    def _is_valid(self, new_point, existing_points):
+        for p in existing_points:
+            dist = np.sqrt((new_point[0] - p[0])**2 + (new_point[1] - p[1])**2)
+            if dist < self.min_distance:
+                return False
+        return True
 
     def generate_points(self):
         """
-        Generates a set of random points within specified dimensions. Points are grouped
-        around random cluster centers, with a degree of variation determined by a
-        standard deviation.
+        Generates a set of points grouped around cluster centers while maintaining
+        a minimum distance between each point to avoid overlaps.
 
         Returns
         -------
         list of tuple of int
-            A list of 2D points represented as tuples of integers, where each tuple
-            contains the x and y coordinates of a point. The generated points are
-            bounded by the dimensions defined by `size_x` and `size_y`.
+            A list of non-overlapping 2D points.
         """
         points = []
+        point_generator = NormalPointGenerator(self.number_of_points, self.points_deviation)
+        actual_number_of_points = point_generator.calculate_number_of_points()
 
         cluster_centers = []
         for _ in range(self.num_clusters):
@@ -269,15 +295,19 @@ class ClusteredAlgorithmCenterGenerator(CenterPointsGenerator):
             cy = random.uniform(self.dev, self.size_y - self.dev)
             cluster_centers.append((cx, cy))
 
-        for _ in range(self.number_of_points):
-            chosen_center = random.choice(cluster_centers)
+        max_attempts = 50
+        for _ in range(actual_number_of_points):
+            for _ in range(max_attempts):
+                center = random.choice(cluster_centers)
+                x = random.gauss(center[0], self.dev)
+                y = random.gauss(center[1], self.dev)
 
-            x = random.gauss(chosen_center[0], self.dev)
-            y = random.gauss(chosen_center[1], self.dev)
+                x = max(0, min(int(x), self.size_x - 1))
+                y = max(0, min(int(y), self.size_y - 1))
+                new_point = (x, y)
 
-            x = max(0, min(int(x), self.size_x))
-            y = max(0, min(int(y), self.size_y))
-
-            points.append((int(x), int(y)))
+                if self._is_valid(new_point, points):
+                    points.append(new_point)
+                    break
 
         return points

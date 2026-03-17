@@ -1,7 +1,6 @@
 import math
 
 import cv2
-import noise
 import numpy as np
 
 from src.utils.classes.nucleus import NucleiOld, Nuclei
@@ -40,35 +39,36 @@ class CancerNucleusOld(NucleiOld):
 
     def draw_nuclei_with_perlin_noise(self, image):
         """
-        Draws nuclei shapes on the provided image using a Perlin noise-based algorithm to
-        create irregular and biologically inspired edges.
-
-        This function modifies the input image by overlaying polygonal nuclei shapes that
-        simulate natural irregularities using noise values. The function supports color
-        customization, border thickness, and rotation of the nuclei shapes.
-
-        Args:
-            image (numpy.ndarray): The input image on which the nuclei shapes are drawn.
+        Draws nuclei shapes with smooth, biological irregularities.
         """
+        if self.center is None or self.axes is None:
+            return
         cx, cy = self.center
         ax, ay = self.axes
         angle = np.deg2rad(self.angle)
 
+        rng = np.random.RandomState(self.seed)
+        
         points = []
-        num_points = 1000
+        num_points = 128
 
+        num_waves = 5
+        noise_values = np.array([rng.uniform(-1, 1) for _ in range(num_waves)])
+        
         for i in range(num_points):
             t = 2 * math.pi * i / num_points
             x = ax * np.cos(t)
             y = ay * np.sin(t)
 
-            perlin_value = noise.pnoise1(t * 2.0,
-                                         octaves=4,
-                                         persistence=0.5,
-                                         lacunarity=3.0,
-                                         repeat=1024,
-                                         base=self.seed)
-            factor = 1 + self.irregularity * perlin_value
+            phase = (t / (2 * math.pi)) * num_waves
+            idx = int(phase) % num_waves
+            next_idx = (idx + 1) % num_waves
+            alpha = phase - int(phase)
+            
+            cos_alpha = (1 - np.cos(alpha * math.pi)) / 2
+            perlin_like = (1 - cos_alpha) * noise_values[idx] + cos_alpha * noise_values[next_idx]
+            
+            factor = 1 + perlin_like * self.irregularity * 0.4
 
             x *= factor
             y *= factor
@@ -78,7 +78,6 @@ class CancerNucleusOld(NucleiOld):
 
             px = int(cx + xr)
             py = int(cy + yr)
-            # Clip points to image bounds to prevent crashes
             px = int(np.clip(px, 0, image.shape[1] - 1))
             py = int(np.clip(py, 0, image.shape[0] - 1))
             points.append([px, py])
@@ -95,6 +94,7 @@ class CancerNucleus(Nuclei):
                  axes_generator_instance,
                  irregularity=0.3,
                  color = None,
+                 border_color = None,
                  **kwargs):
 
         self.irregularity = irregularity
@@ -103,10 +103,14 @@ class CancerNucleus(Nuclei):
         if color is None:
             color = generate_color_variation_normal((160, 83, 179))
 
+        if border_color is None:
+            border_color = generate_color_variation_normal((107, 26, 121))
+
         super().__init__(
             point_generator_instance=point_generator_instance,
             axes_generator_instance=axes_generator_instance,
             color = color,
+            border_color = border_color,
             **kwargs
         )
 
@@ -115,35 +119,38 @@ class CancerNucleus(Nuclei):
 
     def draw_nuclei_with_perlin_noise(self, image):
         """
-        Draws nuclei shapes on the provided image using a Perlin noise-based algorithm to
-        create irregular and biologically inspired edges.
-
-        This function modifies the input image by overlaying polygonal nuclei shapes that
-        simulate natural irregularities using noise values. The function supports color
-        customization, border thickness, and rotation of the nuclei shapes.
-
-        Args:
-            image (numpy.ndarray): The input image on which the nuclei shapes are drawn.
+        Draws nuclei shapes with subtle, biological irregularities.
+        Maintains elliptical base with gentle deformations like real biopsy samples.
         """
+        if self.center is None or self.axes is None:
+            return
+        
         cx, cy = self.center
         ax, ay = self.axes
         angle = np.deg2rad(self.angle)
 
+        rng = np.random.RandomState(self.seed)
+        
         points = []
-        num_points = 1000
+        num_points = 128
 
+        num_waves = 5
+        noise_values = np.array([rng.uniform(-1, 1) for _ in range(num_waves)])
+        
         for i in range(num_points):
             t = 2 * math.pi * i / num_points
             x = ax * np.cos(t)
             y = ay * np.sin(t)
 
-            perlin_value = noise.pnoise1(t * 2.0,
-                                         octaves=4,
-                                         persistence=0.5,
-                                         lacunarity=3.0,
-                                         repeat=1024,
-                                         base=self.seed)
-            factor = 1 + self.irregularity * perlin_value
+            phase = (t / (2 * math.pi)) * num_waves
+            idx = int(phase) % num_waves
+            next_idx = (idx + 1) % num_waves
+            alpha = phase - int(phase)
+            
+            cos_alpha = (1 - np.cos(alpha * math.pi)) / 2
+            perlin_like = (1 - cos_alpha) * noise_values[idx] + cos_alpha * noise_values[next_idx]
+            
+            factor = 1 + perlin_like * self.irregularity * 0.4
 
             x *= factor
             y *= factor
@@ -153,7 +160,6 @@ class CancerNucleus(Nuclei):
 
             px = int(cx + xr)
             py = int(cy + yr)
-            # Clip points to image bounds to prevent crashes
             px = int(np.clip(px, 0, image.shape[1] - 1))
             py = int(np.clip(py, 0, image.shape[0] - 1))
             points.append([px, py])
