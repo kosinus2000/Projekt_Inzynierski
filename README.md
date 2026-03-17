@@ -21,6 +21,7 @@ Celem pracy jest zaprojektowanie i implementacja systemu do generowania syntetyc
 Wyniki projektu mogą mieć zastosowanie w diagnostyce medycznej, wspierając wykrywanie zmian patologicznych w obrazach mikroskopowych.
 
 
-
+## Pliki
 Głównym plikiem projektu, zawierającym implementację systemu, jest notatnik Jupyter Notebook znajdujący się pod ścieżką \texttt{/notebook/03_1_testy_i_wyniki.ipynb}.
+Projekt w przysłości zostanie rozbudowany o dodatkowe funkcje, oraz sprawdzone zostanie działanie enkodera dla funkcji straty SSIM.
 
