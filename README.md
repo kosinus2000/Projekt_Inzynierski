@@ -22,5 +22,5 @@ Wyniki projektu mogą mieć zastosowanie w diagnostyce medycznej, wspierając wy
 
 
 
- ### Projekt inżynierski w trakcie prac
+Głównym plikiem projektu w którym zamieszczona jest implementacja systemu jest Jupyter Notebook pod ścieżką /notebook/03_1_testy_i_wyniki.ipynb
 
