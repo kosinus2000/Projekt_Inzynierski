@@ -22,5 +22,5 @@ Wyniki projektu mogą mieć zastosowanie w diagnostyce medycznej, wspierając wy
 
 
 
-Głównym plikiem projektu w którym zamieszczona jest implementacja systemu jest Jupyter Notebook pod ścieżką /notebook/03_1_testy_i_wyniki.ipynb
+Głównym plikiem projektu, zawierającym implementację systemu, jest notatnik Jupyter Notebook znajdujący się pod ścieżką \texttt{/notebook/03_1_testy_i_wyniki.ipynb}.
 
